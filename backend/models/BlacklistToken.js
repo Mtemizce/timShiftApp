@@ -1,10 +1,10 @@
 // ✅ Token blacklist modeli
-// backend/models/BlacklistedToken.js
+// backend/models/BlacklistToken.js
 
 import { DataTypes } from 'sequelize'
 import sequelize from '../config/database.js'
 
-const BlacklistedToken = sequelize.define('BlacklistedToken', {
+const BlacklistToken = sequelize.define('BlacklistToken', {
   token: {
     type: DataTypes.TEXT,
     allowNull: false,
@@ -24,4 +24,4 @@ const BlacklistedToken = sequelize.define('BlacklistedToken', {
   updatedAt: false
 })
 
-export default BlacklistedToken
+export default BlacklistToken

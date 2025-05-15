@@ -11,6 +11,7 @@
     "dev:backend": "node backend/server.js",
     "dev:frontend": "vite --config vite.config.js",
     "db:init": "node cli/init-db.js",
+    "add:admin": "node cli/add-admin.js",
     "session:clear": "node cli/clear-tokens.js"
   },
   "dependencies": {
