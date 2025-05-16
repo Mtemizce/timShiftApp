@@ -12,7 +12,9 @@
     "dev:frontend": "vite --config vite.config.js",
     "db:init": "node cli/init-db.js",
     "add:admin": "node cli/add-admin.js",
-    "session:clear": "node cli/clear-tokens.js"
+    "session:clear": "node cli/clear-tokens.js",
+    "seed:definitions": "node cli/init-definitions.js",
+    "seed:config": "node cli/init-system-config.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

@@ -22,6 +22,13 @@ const createAdmin = async () => {
     const phone = await ask('Telefon: ')
     const email = await ask('E-posta: ')
     const password = await ask('Şifre: ')
+    const role = await ask('Rol (admin | super-admin): ')
+
+    if (!['admin', 'super-admin'].includes(role)) {
+      console.log('❌ Geçersiz rol! Sadece "admin" veya "super-admin" olabilir.')
+      rl.close()
+      process.exit(1)
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -30,10 +37,11 @@ const createAdmin = async () => {
       name,
       phone,
       email,
+      role,
       password: hashedPassword
     })
 
-    console.log('✅ Admin başarıyla oluşturuldu.')
+    console.log(`✅ ${role} başarıyla oluşturuldu.`)
     rl.close()
     process.exit(0)
   } catch (error) {
