@@ -5,6 +5,8 @@ const AuthController = {
     try {
       const { username, password } = req.body
       const token = await AuthService.login(username, password)
+
+      res.locals.logData = { name: username } // 👈 Log verisi middleware'e gider
       res.json({ token })
     } catch (err) {
       res.status(401).json({ message: err.message })
@@ -16,20 +18,19 @@ const AuthController = {
   },
 
   logout: async (req, res) => {
-  try {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
+    try {
+      const authHeader = req.headers['authorization']
+      const token = authHeader && authHeader.split(' ')[1]
+      if (!token) return res.status(400).json({ message: 'Token bulunamadı' })
 
-    if (!token) return res.status(400).json({ message: 'Token bulunamadı' })
+      await AuthService.logout(token)
 
-    await AuthService.logout(token)
-    res.json({ message: 'Çıkış yapıldı' })
-  } catch (err) {
-    res.status(500).json({ message: 'Logout hatası', error: err.message })
+      res.locals.logData = { name: req.user.username } // 👈 Logout logu için de logData
+      res.json({ message: 'Çıkış yapıldı' })
+    } catch (err) {
+      res.status(500).json({ message: 'Logout hatası', error: err.message })
+    }
   }
-}
-
-
 }
 
 export default AuthController
