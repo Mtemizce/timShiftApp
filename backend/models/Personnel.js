@@ -28,6 +28,7 @@ const Personnel = sequelize.define('Personnel', {
   size_coat: DataTypes.STRING,
   size_shoes: DataTypes.STRING,
   start_date: DataTypes.DATEONLY,
+  end_date: DataTypes.DATEONLY, // işten çıkış tarihi 
   role: DataTypes.STRING,
   image_file: DataTypes.STRING
 }, {

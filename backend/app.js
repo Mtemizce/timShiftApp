@@ -7,7 +7,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-import authRoutes from './routes/authRoutes.js'
-app.use('/api/auth', authRoutes)
+import registerRoutes from './routes/index.js'
+registerRoutes(app)
 
 export default app
