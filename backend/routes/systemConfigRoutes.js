@@ -1,5 +1,7 @@
 import SystemConfigController from "../controllers/SystemConfigController.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { logActivityMiddleware } from '../middleware/logMiddleware.js'
+
 
 export default [
   {

@@ -4,17 +4,19 @@ dotenv.config()
 import sequelize from '../backend/config/database.js'
 
 // Modeller
-import Admin from '../backend/models/Admin.js'
+
 import BlacklistToken from '../backend/models/BlacklistToken.js'
 import ActivityLog from '../backend/models/ActivityLog.js'
 import Personnel from '../backend/models/Personnel.js'
 import SystemConfig from '../backend/models/SystemConfig.js'
 import Definition from '../backend/models/Definition.js'
 
-import Role from '../backend/models/Role.js'
+
 import Permission from '../backend/models/Permission.js'
 import AdminRole from '../backend/models/AdminRole.js'
 import RolePermission from '../backend/models/RolePermission.js'
+
+import '../backend/models/index.js' // ilişki tanımlarını yükle
 
 const migrate = async () => {
   try {

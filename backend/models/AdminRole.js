@@ -1,31 +1,17 @@
-// ✅ backend/models/AdminRole.js
-
 import { DataTypes } from 'sequelize'
 import sequelize from '../config/database.js'
-import Admin from './Admin.js'
-import Role from './Role.js'
 
 const AdminRole = sequelize.define('AdminRole', {
-  admin_id: {
+  id: {
     type: DataTypes.INTEGER,
-    references: {
-      model: Admin,
-      key: 'id'
-    }
+    autoIncrement: true,
+    primaryKey: true
   },
-  role_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Role,
-      key: 'id'
-    }
-  }
+  admin_id: DataTypes.INTEGER,
+  role_id: DataTypes.INTEGER
 }, {
   tableName: 'admin_roles',
   timestamps: false
 })
-
-Admin.belongsToMany(Role, { through: AdminRole, foreignKey: 'admin_id' })
-Role.belongsToMany(Admin, { through: AdminRole, foreignKey: 'role_id' })
 
 export default AdminRole

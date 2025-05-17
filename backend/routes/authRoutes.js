@@ -8,7 +8,7 @@ export default [
     path: '/login',
     handler: AuthController.login,
     permission: null,
-    middlewares: [logActivityMiddleware('auth', 'login')]
+    middlewares: []
   },
   {
     method: 'get',
