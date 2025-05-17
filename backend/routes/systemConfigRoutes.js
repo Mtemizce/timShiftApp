@@ -1,12 +1,19 @@
-// ✅ backend/routes/systemConfigRoutes.js
+import SystemConfigController from "../controllers/SystemConfigController.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
-import express from 'express'
-import SystemConfigController from '../controllers/SystemConfigController.js'
-import { authenticateToken } from '../middleware/authMiddleware.js'
-
-const router = express.Router()
-
-router.get('/', authenticateToken, SystemConfigController.get)
-router.put('/', authenticateToken, SystemConfigController.update)
-
-export default router
+export default [
+  {
+    method: "get",
+    path: "/",
+    handler: SystemConfigController.get,
+    permission: "config.view",
+    middlewares: [authenticateToken],
+  },
+  {
+    method: "put",
+    path: "/",
+    handler: SystemConfigController.update,
+    permission: "config.update",
+    middlewares: [authenticateToken, logActivityMiddleware("system-config", "update")],
+  },
+];

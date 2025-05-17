@@ -14,7 +14,10 @@
     "add:admin": "node cli/add-admin.js",
     "session:clear": "node cli/clear-tokens.js",
     "seed:definitions": "node cli/init-definitions.js",
-    "seed:config": "node cli/init-system-config.js"
+    "seed:config": "node cli/init-system-config.js",
+    "seed:roles": "node cli/init-roles.js",
+    "seed:permissions": "node cli/init-permissions.js",
+    "seed:role-permissions": "node cli/init-role-permissions.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

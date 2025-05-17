@@ -1,12 +1,43 @@
-// ✅ backend/routes/definitionRoutes.js
-
-import express from 'express'
 import DefinitionController from '../controllers/DefinitionController.js'
 import { authenticateToken } from '../middleware/authMiddleware.js'
+import { logActivityMiddleware } from '../middleware/logMiddleware.js'
 
-const router = express.Router()
-
-// Örnek: GET /api/definitions/personnel_type
-router.get('/:type', authenticateToken, DefinitionController.getByType)
-
-export default router
+export default [
+  {
+    method: 'get',
+    path: '/:type',
+    handler: DefinitionController.getByType,
+    permission: 'definition.view',
+    middlewares: [authenticateToken]
+  },
+  {
+    method: 'post',
+    path: '/',
+    handler: DefinitionController.store,
+    permission: 'definition.create',
+    middlewares: [
+      authenticateToken,
+      logActivityMiddleware('definition', 'create')
+    ]
+  },
+  {
+    method: 'put',
+    path: '/:id',
+    handler: DefinitionController.update,
+    permission: 'definition.update',
+    middlewares: [
+      authenticateToken,
+      logActivityMiddleware('definition', 'update')
+    ]
+  },
+  {
+    method: 'delete',
+    path: '/:id',
+    handler: DefinitionController.destroy,
+    permission: 'definition.delete',
+    middlewares: [
+      authenticateToken,
+      logActivityMiddleware('definition', 'delete')
+    ]
+  }
+]

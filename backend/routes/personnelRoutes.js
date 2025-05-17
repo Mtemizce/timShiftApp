@@ -1,38 +1,41 @@
-// ✅ backend/routes/personnelRoutes.js
-
-import express from 'express'
 import PersonnelController from '../controllers/PersonnelController.js'
 import { authenticateToken } from '../middleware/authMiddleware.js'
 import { logActivityMiddleware } from '../middleware/logMiddleware.js'
 
-const router = express.Router()
-
-// Listeleme (log yok)
-router.get('/', authenticateToken, PersonnelController.index)
-router.get('/:id', authenticateToken, PersonnelController.show)
-
-// Oluşturma
-router.post(
-  '/',
-  authenticateToken,
-  logActivityMiddleware('personnel', 'create'),
-  PersonnelController.store
-)
-
-// Güncelleme
-router.put(
-  '/:id',
-  authenticateToken,
-  logActivityMiddleware('personnel', 'update'),
-  PersonnelController.update
-)
-
-// Silme
-router.delete(
-  '/:id',
-  authenticateToken,
-  logActivityMiddleware('personnel', 'delete'),
-  PersonnelController.destroy
-)
-
-export default router
+export default [
+  {
+    method: 'get',
+    path: '/',
+    handler: PersonnelController.index,
+    permission: 'personnel.view',
+    middlewares: [authenticateToken]
+  },
+  {
+    method: 'get',
+    path: '/:id',
+    handler: PersonnelController.show,
+    permission: 'personnel.view',
+    middlewares: [authenticateToken]
+  },
+  {
+    method: 'post',
+    path: '/',
+    handler: PersonnelController.store,
+    permission: 'personnel.create',
+    middlewares: [authenticateToken, logActivityMiddleware('personnel', 'create')]
+  },
+  {
+    method: 'put',
+    path: '/:id',
+    handler: PersonnelController.update,
+    permission: 'personnel.update',
+    middlewares: [authenticateToken, logActivityMiddleware('personnel', 'update')]
+  },
+  {
+    method: 'delete',
+    path: '/:id',
+    handler: PersonnelController.destroy,
+    permission: 'personnel.delete',
+    middlewares: [authenticateToken, logActivityMiddleware('personnel', 'delete')]
+  }
+]

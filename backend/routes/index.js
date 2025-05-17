@@ -4,16 +4,31 @@ import authRoutes from './authRoutes.js'
 import personnelRoutes from './personnelRoutes.js'
 import definitionRoutes from './definitionRoutes.js'
 import systemConfigRoutes from './systemConfigRoutes.js'
-// import leaveRoutes from './leaveRoutes.js'
-// import reportRoutes from './reportRoutes.js'
+import { permissionMiddleware } from '../middleware/permissionMiddleware.js'
+
+// Tüm route gruplarını tek diziye topla
+const routeGroups = [
+  { basePath: '/api/auth', routes: authRoutes },
+  { basePath: '/api/personnel', routes: personnelRoutes },
+  { basePath: '/api/definitions', routes: definitionRoutes },
+  { basePath: '/api/system-config', routes: systemConfigRoutes }
+  // 🔜 İleride leave, report gibi modüller buraya eklenebilir
+]
 
 export default function registerRoutes(app) {
-  app.use('/api/auth', authRoutes)
-  app.use('/api/personnel', personnelRoutes)
-  app.use('/api/definitions', definitionRoutes)
-  app.use('/api/system-config', systemConfigRoutes)
+  routeGroups.forEach(group => {
+    const { basePath, routes } = group
 
-  // İleride şu modüller eklenebilir:
-  // app.use('/api/leave', leaveRoutes)
-  // app.use('/api/report', reportRoutes)
+    routes.forEach(({ method, path, handler, permission, middlewares = [] }) => {
+      const fullPath = `${basePath}${path}`
+
+      const routeStack = [
+        ...(permission ? [permissionMiddleware(permission)] : []),
+        ...middlewares,
+        handler
+      ]
+
+      app[method](fullPath, ...routeStack)
+    })
+  })
 }
