@@ -8,7 +8,7 @@ export default [
     path: '/:type',
     handler: DefinitionController.getByType,
     permission: 'definition.view',
-    middlewares: [authenticateToken]
+    middlewares: [authenticateToken, logActivityMiddleware('definition', 'get')]
   },
   {
     method: 'post',

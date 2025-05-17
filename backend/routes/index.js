@@ -23,8 +23,8 @@ export default function registerRoutes(app) {
       const fullPath = `${basePath}${path}`
 
       const routeStack = [
-        ...(permission ? [permissionMiddleware(permission)] : []),
         ...middlewares,
+        ...(permission ? [permissionMiddleware(permission)] : []),
         handler
       ]
 
