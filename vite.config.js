@@ -8,11 +8,12 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, path.resolve())
+  // ✅ .env dosyasını doğru konumdan oku
+  const env = loadEnv(mode, __dirname)
 
   return {
     root: 'frontend',
-    plugins: [react(),tailwindcss(),],
+    plugins: [react(), tailwindcss()],
     server: {
       port: parseInt(env.VITE_PORT),
       proxy: {
