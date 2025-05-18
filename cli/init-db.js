@@ -15,6 +15,7 @@ import Definition from '../backend/models/Definition.js'
 import Permission from '../backend/models/Permission.js'
 import AdminRole from '../backend/models/AdminRole.js'
 import RolePermission from '../backend/models/RolePermission.js'
+import Session from '../backend/models/Session.js'
 
 import '../backend/models/index.js' // ilişki tanımlarını yükle
 
