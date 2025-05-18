@@ -1,11 +1,8 @@
-import React from 'react'
+// ✅ frontend/App.jsx
 
-const App = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-xl">
-      Merhaba Admin 👑
-    </div>
-  )
+import { useRoutes } from 'react-router-dom'
+import { appRoutes } from './routes'
+
+export default function App() {
+  return useRoutes(appRoutes)
 }
-
-export default App
