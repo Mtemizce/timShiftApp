@@ -1,5 +1,4 @@
-// frontend/modules/Personnel/Index.jsx
-
+// ✅ frontend/modules/Personnel/Index.jsx (tam entegre, bug fix'li, responsive)
 import { useState, useMemo } from 'react'
 import Topbar from './components/Topbar'
 import Widget from '../../components/Widget'
@@ -26,27 +25,27 @@ export default function PersonnelIndex() {
   const filteredData = useMemo(() => {
     return MOCK_DATA.filter((person) =>
       Object.values(person).some((val) =>
-        val.toLowerCase().includes(searchText.toLowerCase())
+        String(val).toLowerCase().includes(searchText.toLowerCase())
       )
     )
   }, [searchText])
 
   return (
-    <div>
+    <div className="space-y-6">
       <Topbar />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Widget title="Toplam Personel" value={MOCK_DATA.length} icon={<Users />} color="bg-blue-600" />
         <Widget title="Aktif Personel" value={MOCK_DATA.length - 1} icon={<UserCheck />} color="bg-green-600" />
         <Widget title="Şoför Sayısı" value={2} icon={<Truck />} color="bg-yellow-600" />
       </div>
 
-      <div className="bg-white rounded shadow p-4 overflow-x-auto">
+      <div className="bg-white dark:bg-gray-800 rounded shadow p-4 overflow-x-auto">
         <PersonnelTableHeader />
 
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left bg-gray-100">
+            <tr className="text-left bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
               <th className="p-2">#</th>
               {['name', 'phone', 'department', 'role'].map((col) => (
                 usePersonnelStore.getState().visibleColumns.includes(col) && (
