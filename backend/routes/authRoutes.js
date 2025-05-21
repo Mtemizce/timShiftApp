@@ -1,8 +1,9 @@
-import AuthController from '../controllers/AuthController.js'
-import { authenticateToken } from '../middleware/authMiddleware.js'
-import { logActivityMiddleware } from '../middleware/logMiddleware.js'
+// ✅ backend/routes/authRoutes.js (CommonJS uyumlu)
+const AuthController = require('../controllers/AuthController')
+const { authenticateToken } = require('../middleware/authMiddleware')
+const { logActivityMiddleware } = require('../middleware/logMiddleware')
 
-export default [
+module.exports = [
   {
     method: 'post',
     path: '/login',

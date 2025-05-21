@@ -1,5 +1,5 @@
-// ✅ frontend/modules/Personnel/Index.jsx (tam entegre, bug fix'li, responsive)
-import { useState, useMemo } from 'react'
+// ✅ frontend/modules/Personnel/Index.jsx (revize: sade, dark mode uyumlu, full responsive)
+import { useState, useMemo, useRef, useEffect } from 'react'
 import Topbar from './components/Topbar'
 import Widget from '../../components/Widget'
 import PersonnelTableHeader from './components/PersonnelTable/PersonnelTableHeader'
@@ -20,7 +20,15 @@ const MOCK_DATA = [
 export default function PersonnelIndex() {
   const [dropdownId, setDropdownId] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const { searchText } = usePersonnelStore()
+  const { searchText, fullscreen, setFullscreen } = usePersonnelStore()
+  const tableRef = useRef()
+
+  useEffect(() => {
+    if (fullscreen && tableRef.current?.requestFullscreen) {
+      tableRef.current.requestFullscreen()
+      setFullscreen(false)
+    }
+  }, [fullscreen, setFullscreen])
 
   const filteredData = useMemo(() => {
     return MOCK_DATA.filter((person) =>
@@ -40,7 +48,7 @@ export default function PersonnelIndex() {
         <Widget title="Şoför Sayısı" value={2} icon={<Truck />} color="bg-yellow-600" />
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded shadow p-4 overflow-x-auto">
+      <div id="table-wrapper" ref={tableRef} className="bg-white dark:bg-gray-800 rounded shadow p-4 overflow-x-auto">
         <PersonnelTableHeader />
 
         <table className="w-full text-sm">

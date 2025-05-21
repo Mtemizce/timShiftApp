@@ -1,32 +1,31 @@
 // ✅ backend/controllers/AuthController.js
-
-import AuthService from '../services/AuthService.js'
-import Admin from '../models/Admin.js'
-import Role from '../models/Role.js'
-import Permission from '../models/Permission.js'
-import ActivityLog from '../models/ActivityLog.js'
+const AuthService = require('../services/AuthService')
+const Admin = require('../models/Admin')
+const Role = require('../models/Role')
+const Permission = require('../models/Permission')
+const ActivityLog = require('../models/ActivityLog')
 
 const AuthController = {
   login: async (req, res) => {
-  try {
-    const { username, password } = req.body
-    const token = await AuthService.login(username, password)
+    try {
+      const { username, password } = req.body
+      const token = await AuthService.login(username, password)
 
-    const admin = await Admin.findOne({ where: { username } })
+      const admin = await Admin.findOne({ where: { username } })
 
-    await ActivityLog.create({
-      admin_id: admin.id,
-      module: 'auth',
-      action: 'login',
-      target_id: admin.id,
-      description: `${admin.username} kullanıcısı sisteme giriş yaptı.`
-    })
+      await ActivityLog.create({
+        admin_id: admin.id,
+        module: 'auth',
+        action: 'login',
+        target_id: admin.id,
+        description: `${admin.username} kullanıcısı sisteme giriş yaptı.`
+      })
 
-    res.json({ token })
-  } catch (err) {
-    res.status(401).json({ message: err.message })
-  }
-},
+      res.json({ token })
+    } catch (err) {
+      res.status(401).json({ message: err.message })
+    }
+  },
 
   me: async (req, res) => {
     try {
@@ -74,4 +73,4 @@ const AuthController = {
   }
 }
 
-export default AuthController
+module.exports = AuthController

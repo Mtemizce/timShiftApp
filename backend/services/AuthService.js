@@ -1,18 +1,11 @@
-// ✅ backend/services/AuthService.js (Session kontrolü entegre)
+// ✅ backend/services/AuthService.js
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const { Admin, Role, Permission, Session, BlacklistToken } = require('../models')
 
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
-import dotenv from 'dotenv'
-dotenv.config()
-
-import Admin from '../models/Admin.js'
-import Role from '../models/Role.js'
-import Permission from '../models/Permission.js'
-import Session from '../models/Session.js'
-import BlacklistToken from '../models/BlacklistToken.js'
-
-const TOKEN_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h'
-const TOKEN_MS = 60 * 60 * 1000 // 1 saat
+const SESSION_MINUTES = parseInt(process.env.SESSION_TIMEOUT_MINUTES || '60', 10)
+const TOKEN_MS = SESSION_MINUTES * 60 * 1000
+const TOKEN_EXPIRES_IN = `${SESSION_MINUTES}m`
 
 const AuthService = {
   login: async (username, password) => {
@@ -29,7 +22,6 @@ const AuthService = {
     const passwordMatch = await bcrypt.compare(password, admin.password)
     if (!passwordMatch) throw new Error('Şifre yanlış')
 
-    // ➕ Session kontrolü (aktif session var mı?)
     const existingSession = await Session.findOne({
       where: {
         admin_id: admin.id,
@@ -48,21 +40,15 @@ const AuthService = {
       }
     }
 
-    // Roller ve izinleri al
     const roles = admin.Roles?.map(role => role.name) || []
     const permissions = admin.Roles?.flatMap(role => role.Permissions?.map(p => p.name)) || []
 
     const token = jwt.sign(
-      {
-        id: admin.id,
-        roles,
-        permissions
-      },
+      { id: admin.id, roles, permissions },
       process.env.JWT_SECRET,
       { expiresIn: TOKEN_EXPIRES_IN }
     )
 
-    // Yeni session kaydı
     await Session.create({
       admin_id: admin.id,
       token,
@@ -87,4 +73,4 @@ const AuthService = {
   }
 }
 
-export default AuthService
+module.exports = AuthService

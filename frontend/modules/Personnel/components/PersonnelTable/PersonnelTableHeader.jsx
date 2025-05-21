@@ -1,69 +1,99 @@
-// frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx
-
-import { Maximize2, Eye, EyeOff, Search } from 'lucide-react'
+// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: toggle fullscreen butonu)
+import { Maximize2 } from 'lucide-react'
 import usePersonnelStore from '@/store/personnel'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+const columnOptions = [
+  { key: 'name', label: 'Ad Soyad' },
+  { key: 'phone', label: 'Telefon' },
+  { key: 'department', label: 'Departman' },
+  { key: 'role', label: 'Görev' }
+]
 
 export default function PersonnelTableHeader() {
-  const { searchText, setSearchText, visibleColumns, toggleColumn, setFullscreen } = usePersonnelStore()
-  const [showColumns, setShowColumns] = useState(false)
-  const columns = ['name', 'phone', 'department', 'role']
+  const { visibleColumns, toggleColumn, setVisibleColumns, setFullscreen } = usePersonnelStore()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef(null)
 
-  const handleFullscreen = () => {
-    const elem = document.documentElement
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen()
-      setFullscreen(true)
-    } else {
-      document.exitFullscreen()
-      setFullscreen(false)
+  useEffect(() => {
+    const stored = localStorage.getItem('personnel_visible_columns')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          setVisibleColumns(parsed)
+        }
+      } catch {
+        console.warn('Kolonlar okunamadı')
+      }
     }
+  }, [setVisibleColumns])
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const handleToggle = (key) => {
+    toggleColumn(key)
+    const updated = visibleColumns.includes(key)
+      ? visibleColumns.filter((col) => col !== key)
+      : [...visibleColumns, key]
+    localStorage.setItem('personnel_visible_columns', JSON.stringify(updated))
   }
 
-  return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-      <div className="flex gap-2 items-center">
-        <button
-          onClick={handleFullscreen}
-          className="text-sm px-3 py-1 rounded bg-blue-200 hover:bg-blue-300 flex items-center"
-        >
-          <Maximize2 className="w-4 h-4 mr-1" />
-          Tam Ekran
-        </button>
+  const toggleFullscreen = () => {
+  const wrapper = document.getElementById('table-wrapper')
 
-        <div className="relative">
-          <button
-            onClick={() => setShowColumns(!showColumns)}
-            className="text-sm px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-          >
-            Kolonlar
-          </button>
-          {showColumns && (
-            <div className="absolute z-10 bg-white shadow border rounded mt-1 p-2 w-40">
-              {columns.map((col) => (
-                <label key={col} className="flex items-center text-sm gap-2 mb-1">
-                  <input
-                    type="checkbox"
-                    checked={visibleColumns.includes(col)}
-                    onChange={() => toggleColumn(col)}
-                  />
-                  {col}
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
+  if (!document.fullscreenElement && wrapper?.requestFullscreen) {
+    wrapper.requestFullscreen()
+  } else if (document.fullscreenElement && document.exitFullscreen) {
+    document.exitFullscreen()
+  }
+}
+
+
+  return (
+    <div className="flex justify-between items-center mb-4">
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="px-3 py-2 rounded border bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 text-sm"
+        >
+          Kolonlar
+        </button>
+        {dropdownOpen && (
+          <div className="absolute mt-1 w-52 bg-white dark:bg-gray-800 border rounded shadow z-20 p-2">
+            {columnOptions.map((col) => (
+              <label
+                key={col.key}
+                className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer text-sm"
+              >
+                <input
+                  type="checkbox"
+                  checked={visibleColumns.includes(col.key)}
+                  onChange={() => handleToggle(col.key)}
+                />
+                {col.label}
+              </label>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="relative w-full sm:w-auto">
-        <Search className="absolute left-2 top-2 w-4 h-4 text-gray-500" />
-        <input
-          type="search"
-          placeholder="Personel ara..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          className="pl-8 pr-4 py-1.5 rounded border border-gray-300 text-sm w-full sm:w-64"
-        />
+      <div className="flex items-center gap-2">
+        <button
+          onClick={toggleFullscreen}
+          className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer"
+          title="Tam ekran"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
       </div>
     </div>
   )

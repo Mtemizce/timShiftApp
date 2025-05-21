@@ -1,20 +1,22 @@
-// frontend/store/personnel.js
+// ✅ frontend/store/personnel.js (tam revize edilmiş hali)
 import { create } from 'zustand'
 
 const usePersonnelStore = create((set) => ({
   searchText: '',
+  visibleColumns: ['name', 'phone', 'department', 'role'],
+  fullscreen: false,
+
   setSearchText: (text) => set({ searchText: text }),
 
-  fullscreen: false,
-  setFullscreen: (value) => set({ fullscreen: value }),
+  toggleColumn: (key) => set((state) => ({
+    visibleColumns: state.visibleColumns.includes(key)
+      ? state.visibleColumns.filter((col) => col !== key)
+      : [...state.visibleColumns, key]
+  })),
 
-  visibleColumns: ['name', 'phone', 'department', 'role'],
-  toggleColumn: (column) =>
-    set((state) => ({
-      visibleColumns: state.visibleColumns.includes(column)
-        ? state.visibleColumns.filter((col) => col !== column)
-        : [...state.visibleColumns, column],
-    })),
+  setVisibleColumns: (columns) => set({ visibleColumns: columns }),
+
+  setFullscreen: (value) => set({ fullscreen: value })
 }))
 
 export default usePersonnelStore
