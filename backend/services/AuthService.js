@@ -1,7 +1,7 @@
-// ✅ backend/services/AuthService.js
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const { Admin, Role, Permission, Session, BlacklistToken } = require('../models')
+// ✅ backend/services/AuthService.js (ESM uyumlu)
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { Admin, Role, Permission, Session, BlacklistToken } from '../models/index.js'
 
 const SESSION_MINUTES = parseInt(process.env.SESSION_TIMEOUT_MINUTES || '60', 10)
 const TOKEN_MS = SESSION_MINUTES * 60 * 1000
@@ -73,4 +73,4 @@ const AuthService = {
   }
 }
 
-module.exports = AuthService
+export default AuthService

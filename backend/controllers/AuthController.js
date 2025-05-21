@@ -1,9 +1,9 @@
-// ✅ backend/controllers/AuthController.js
-const AuthService = require('../services/AuthService')
-const Admin = require('../models/Admin')
-const Role = require('../models/Role')
-const Permission = require('../models/Permission')
-const ActivityLog = require('../models/ActivityLog')
+// ✅ backend/controllers/AuthController.js (ESM uyumlu)
+import AuthService from '../services/AuthService.js'
+import Admin from '../models/Admin.js'
+import Role from '../models/Role.js'
+import Permission from '../models/Permission.js'
+import ActivityLog from '../models/ActivityLog.js'
 
 const AuthController = {
   login: async (req, res) => {
@@ -73,4 +73,4 @@ const AuthController = {
   }
 }
 
-module.exports = AuthController
+export default AuthController

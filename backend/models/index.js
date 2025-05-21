@@ -5,6 +5,8 @@ import Role from './Role.js'
 import Permission from './Permission.js'
 import AdminRole from './AdminRole.js'
 import RolePermission from './RolePermission.js'
+import BlacklistToken from './BlacklistToken.js'
+import Session from './Session.js'
 
 // 🔗 İlişkiler:
 Admin.belongsToMany(Role, { through: AdminRole, foreignKey: 'admin_id' })
@@ -18,5 +20,7 @@ export {
   Role,
   Permission,
   AdminRole,
-  RolePermission
+  RolePermission, 
+  BlacklistToken,
+  Session
 }
