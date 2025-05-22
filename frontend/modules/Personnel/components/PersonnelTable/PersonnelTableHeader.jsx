@@ -1,7 +1,8 @@
-// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: toggle fullscreen butonu)
+// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: localStorage kullanıcı bazlı sütun ayarı)
 import { Maximize2 } from 'lucide-react'
 import usePersonnelStore from '@/store/personnel'
 import { useEffect, useRef, useState } from 'react'
+import { useAppStore } from '@/store'
 
 const columnOptions = [
   { key: 'name', label: 'Ad Soyad' },
@@ -12,11 +13,13 @@ const columnOptions = [
 
 export default function PersonnelTableHeader() {
   const { visibleColumns, toggleColumn, setVisibleColumns, setFullscreen } = usePersonnelStore()
+  const { admin } = useAppStore()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
+  const key = `personnel_visible_columns_${admin?.id || 'guest'}`
 
   useEffect(() => {
-    const stored = localStorage.getItem('personnel_visible_columns')
+    const stored = localStorage.getItem(key)
     if (stored) {
       try {
         const parsed = JSON.parse(stored)
@@ -27,7 +30,7 @@ export default function PersonnelTableHeader() {
         console.warn('Kolonlar okunamadı')
       }
     }
-  }, [setVisibleColumns])
+  }, [setVisibleColumns, key])
 
   useEffect(() => {
     const handler = (e) => {
@@ -39,24 +42,22 @@ export default function PersonnelTableHeader() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const handleToggle = (key) => {
-    toggleColumn(key)
-    const updated = visibleColumns.includes(key)
-      ? visibleColumns.filter((col) => col !== key)
-      : [...visibleColumns, key]
-    localStorage.setItem('personnel_visible_columns', JSON.stringify(updated))
+  const handleToggle = (colKey) => {
+    toggleColumn(colKey)
+    const updated = visibleColumns.includes(colKey)
+      ? visibleColumns.filter((col) => col !== colKey)
+      : [...visibleColumns, colKey]
+    localStorage.setItem(key, JSON.stringify(updated))
   }
 
   const toggleFullscreen = () => {
-  const wrapper = document.getElementById('table-wrapper')
-
-  if (!document.fullscreenElement && wrapper?.requestFullscreen) {
-    wrapper.requestFullscreen()
-  } else if (document.fullscreenElement && document.exitFullscreen) {
-    document.exitFullscreen()
+    const wrapper = document.getElementById('table-wrapper')
+    if (!document.fullscreenElement && wrapper?.requestFullscreen) {
+      wrapper.requestFullscreen()
+    } else if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen()
+    }
   }
-}
-
 
   return (
     <div className="flex justify-between items-center mb-4">

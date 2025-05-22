@@ -1,4 +1,4 @@
-// ✅ frontend/store/index.js (tam haliyle, logout güncellenmiş ve dark mode destekli)
+// ✅ frontend/store/index.js (revize: kullanıcıya özel logout, genel veriler korunur)
 import { create } from 'zustand'
 
 export const useAppStore = create((set) => ({
@@ -34,8 +34,11 @@ export const useAppStore = create((set) => ({
     } catch (err) {
       console.warn("Logout isteği başarısız:", err.message)
     }
+
+    // sadece kullanıcıya özel verileri sil
     localStorage.removeItem("token")
     localStorage.removeItem("admin")
+    localStorage.removeItem("expires_at")
     set({ admin: null, token: null })
   }
 }))
