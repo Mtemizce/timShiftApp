@@ -1,8 +1,7 @@
-// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: localStorage kullanıcı bazlı sütun ayarı)
+// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: sıralama ikonları Index.jsx içinde gösterilecek şekilde fonksiyon taşındı)
 import { Maximize2 } from 'lucide-react'
 import usePersonnelStore from '@/store/personnel'
 import { useEffect, useRef, useState } from 'react'
-import { useAppStore } from '@/store'
 
 const columnOptions = [
   { key: 'name', label: 'Ad Soyad' },
@@ -12,14 +11,17 @@ const columnOptions = [
 ]
 
 export default function PersonnelTableHeader() {
-  const { visibleColumns, toggleColumn, setVisibleColumns, setFullscreen } = usePersonnelStore()
-  const { admin } = useAppStore()
+  const {
+    visibleColumns,
+    toggleColumn,
+    setVisibleColumns,
+  } = usePersonnelStore()
+
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
-  const key = `personnel_visible_columns_${admin?.id || 'guest'}`
 
   useEffect(() => {
-    const stored = localStorage.getItem(key)
+    const stored = localStorage.getItem('personnelTable_columns')
     if (stored) {
       try {
         const parsed = JSON.parse(stored)
@@ -30,7 +32,7 @@ export default function PersonnelTableHeader() {
         console.warn('Kolonlar okunamadı')
       }
     }
-  }, [setVisibleColumns, key])
+  }, [setVisibleColumns])
 
   useEffect(() => {
     const handler = (e) => {
@@ -47,7 +49,7 @@ export default function PersonnelTableHeader() {
     const updated = visibleColumns.includes(colKey)
       ? visibleColumns.filter((col) => col !== colKey)
       : [...visibleColumns, colKey]
-    localStorage.setItem(key, JSON.stringify(updated))
+    localStorage.setItem('personnelTable_columns', JSON.stringify(updated))
   }
 
   const toggleFullscreen = () => {
@@ -99,3 +101,5 @@ export default function PersonnelTableHeader() {
     </div>
   )
 }
+
+// Not: Sıralama ikonları ve orderBy kontrolü doğrudan <th> kolonlarında yapılmalıdır.

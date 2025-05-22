@@ -1,4 +1,4 @@
-// ✅ frontend/store/index.js (revize: kullanıcıya özel logout, genel veriler korunur)
+// ✅ frontend/store/index.js
 import { create } from 'zustand'
 
 export const useAppStore = create((set) => ({
@@ -23,22 +23,33 @@ export const useAppStore = create((set) => ({
   }),
 
   logout: async () => {
-    const token = localStorage.getItem("token")
-    try {
-      if (token) {
+  const token = localStorage.getItem("token")
+  const admin = JSON.parse(localStorage.getItem("admin"))
+
+  try {
+    if (token) {
+      const [, payload] = token.split('.')
+      const decoded = JSON.parse(atob(payload))
+      const isExpired = decoded.exp * 1000 < Date.now()
+
+      if (!isExpired) {
         await fetch("/api/auth/logout", {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         })
       }
-    } catch (err) {
-      console.warn("Logout isteği başarısız:", err.message)
     }
-
-    // sadece kullanıcıya özel verileri sil
-    localStorage.removeItem("token")
-    localStorage.removeItem("admin")
-    localStorage.removeItem("expires_at")
-    set({ admin: null, token: null })
+  } catch (err) {
+    console.warn("Logout isteği başarısız:", err.message)
   }
+
+  // temizle
+  localStorage.removeItem("token")
+  localStorage.removeItem("admin")
+  localStorage.removeItem("expires_at")
+  localStorage.removeItem("personnelTable_columns")
+
+  set({ admin: null, token: null })
+}
+
 }))
