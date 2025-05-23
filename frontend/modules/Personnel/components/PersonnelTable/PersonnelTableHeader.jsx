@@ -1,21 +1,24 @@
-// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: sıralama ikonları Index.jsx içinde gösterilecek şekilde fonksiyon taşındı)
+// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: filtre elementi store fonksiyonu ile)
 import { Maximize2 } from 'lucide-react'
 import usePersonnelStore from '@/store/personnel'
 import { useEffect, useRef, useState } from 'react'
 
-const columnOptions = [
-  { key: 'name', label: 'Ad Soyad' },
-  { key: 'phone', label: 'Telefon' },
-  { key: 'department', label: 'Departman' },
-  { key: 'role', label: 'Görev' }
-]
-
 export default function PersonnelTableHeader() {
   const {
+    columns,
     visibleColumns,
     toggleColumn,
     setVisibleColumns,
+    data,
+    filters,
+    setFilter,
+    getFilterElement
   } = usePersonnelStore()
+
+  const getUniqueValues = (key) => {
+    const values = data.map((item) => item[key])
+    return [...new Set(values)].filter(Boolean)
+  }
 
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -72,7 +75,7 @@ export default function PersonnelTableHeader() {
         </button>
         {dropdownOpen && (
           <div className="absolute mt-1 w-52 bg-white dark:bg-gray-800 border rounded shadow z-20 p-2">
-            {columnOptions.map((col) => (
+            {columns.map((col) => (
               <label
                 key={col.key}
                 className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer text-sm"
@@ -89,6 +92,20 @@ export default function PersonnelTableHeader() {
         )}
       </div>
 
+      <div className='px-2 py-1 flex-wrap items-center space-x-2'>
+        {columns.map((col) => (
+          <div key={col.key} className="inline-block">
+            {getFilterElement(
+              col.key,
+              col.key === 'department' || col.key === 'role' ? 'select' : 'text',
+              filters[col.key],
+              (val) => setFilter(col.key, val),
+              getUniqueValues(col.key)
+            )}
+          </div>
+        ))}
+      </div>
+
       <div className="flex items-center gap-2">
         <button
           onClick={toggleFullscreen}
@@ -101,5 +118,3 @@ export default function PersonnelTableHeader() {
     </div>
   )
 }
-
-// Not: Sıralama ikonları ve orderBy kontrolü doğrudan <th> kolonlarında yapılmalıdır.

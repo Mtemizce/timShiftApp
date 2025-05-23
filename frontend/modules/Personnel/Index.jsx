@@ -1,3 +1,4 @@
+// ✅ frontend/modules/Personnel/Index.jsx (revize: filters state ile filtreleme destekli)
 import { useEffect, useState, useMemo, useRef } from "react";
 import { Users, UserCheck, Truck, ArrowDownAZ, ArrowDownZA } from "lucide-react";
 import Topbar from "./components/Topbar";
@@ -29,6 +30,7 @@ export default function PersonnelIndex() {
     data,
     setData,
     setOrderBy,
+    filters,
   } = usePersonnelStore();
 
   const tableRef = useRef();
@@ -54,11 +56,17 @@ export default function PersonnelIndex() {
   }, [setFullscreen]);
 
   const filteredData = useMemo(() => {
-    const filtered = data.filter((person) =>
+    let filtered = data.filter((person) =>
       Object.values(person).some((val) =>
         String(val).toLowerCase().includes(searchText.toLowerCase())
       )
     );
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        filtered = filtered.filter((item) => String(item[key]) === value);
+      }
+    });
 
     if (!orderBy) return filtered;
     return filtered.sort((a, b) => {
@@ -68,7 +76,7 @@ export default function PersonnelIndex() {
         ? valA.localeCompare(valB)
         : valB.localeCompare(valA);
     });
-  }, [searchText, orderBy, orderDirection, data]);
+  }, [searchText, orderBy, orderDirection, data, filters]);
 
   return (
     <div className="space-y-6">
