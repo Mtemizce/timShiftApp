@@ -16,7 +16,7 @@ const Personnel = sequelize.define('Personnel', {
   phone: DataTypes.STRING,
   email: DataTypes.STRING,
   marital_status: DataTypes.STRING,
-  criminal_record: DataTypes.BOOLEAN,
+  criminal_record: DataTypes.STRING,
   children_count: DataTypes.INTEGER,
   driving_license: DataTypes.STRING,
   education_level: DataTypes.STRING,

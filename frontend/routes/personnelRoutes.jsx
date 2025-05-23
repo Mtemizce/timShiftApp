@@ -2,6 +2,7 @@
 
 import PersonnelIndex from '../modules/Personnel/Index'
 import AddPersonnel from '../modules/Personnel/pages/addPersonnel'
+import AddMultiplePersonnel from '../modules/Personnel/pages/addMultiplePersonnel'
 
 const PersonnelRoutes = [
   {
@@ -11,6 +12,10 @@ const PersonnelRoutes = [
   {
     path: 'personnel/add',
     element: <AddPersonnel />
+  },
+  {
+    path: 'personnel/add-multiple',
+    element: <AddMultiplePersonnel />
   }
 ]
 

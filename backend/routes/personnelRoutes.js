@@ -1,41 +1,48 @@
-import PersonnelController from '../controllers/PersonnelController.js'
-import { authenticateToken } from '../middleware/authMiddleware.js'
-import { logActivityMiddleware } from '../middleware/logMiddleware.js'
+import PersonnelController from "../controllers/PersonnelController.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
+import { logActivityMiddleware } from "../middleware/logMiddleware.js";
 
 export default [
   {
-    method: 'get',
-    path: '/',
+    method: "get",
+    path: "/",
     handler: PersonnelController.index,
-    permission: 'personnel.view',
-    middlewares: [authenticateToken]
+    permission: "personnel.view",
+    middlewares: [authenticateToken],
   },
   {
-    method: 'get',
-    path: '/:id',
+    method: "get",
+    path: "/:id",
     handler: PersonnelController.show,
-    permission: 'personnel.view',
-    middlewares: [authenticateToken]
+    permission: "personnel.view",
+    middlewares: [authenticateToken],
   },
   {
-    method: 'post',
-    path: '/',
+    method: "post",
+    path: "/",
     handler: PersonnelController.store,
-    permission: 'personnel.create',
-    middlewares: [authenticateToken, logActivityMiddleware('personnel', 'create')]
+    permission: "personnel.create",
+    middlewares: [authenticateToken, logActivityMiddleware("personnel", "create")],
   },
   {
-    method: 'put',
-    path: '/:id',
+    method: "put",
+    path: "/:id",
     handler: PersonnelController.update,
-    permission: 'personnel.update',
-    middlewares: [authenticateToken, logActivityMiddleware('personnel', 'update')]
+    permission: "personnel.update",
+    middlewares: [authenticateToken, logActivityMiddleware("personnel", "update")],
   },
   {
-    method: 'delete',
-    path: '/:id',
+    method: "delete",
+    path: "/:id",
     handler: PersonnelController.destroy,
-    permission: 'personnel.delete',
-    middlewares: [authenticateToken, logActivityMiddleware('personnel', 'delete')]
-  }
-]
+    permission: "personnel.delete",
+    middlewares: [authenticateToken, logActivityMiddleware("personnel", "delete")],
+  },
+  {
+    method: "post",
+    path: "/import",
+    handler: PersonnelController.importBulk,
+    permission: "personnel.create",
+    middlewares: [authenticateToken, logActivityMiddleware("personnel", "import")],
+  },
+];

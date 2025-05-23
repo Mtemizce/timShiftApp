@@ -1,7 +1,8 @@
-// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: filtre elementi store fonksiyonu ile)
+// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableHeader.jsx (revize: sadece belirli sütunlara filtre uygulanacak şekilde güncellendi)
 import { Maximize2 } from 'lucide-react'
 import usePersonnelStore from '@/store/personnel'
 import { useEffect, useRef, useState } from 'react'
+import TableFilter from './TableFilter'
 
 export default function PersonnelTableHeader() {
   const {
@@ -11,9 +12,13 @@ export default function PersonnelTableHeader() {
     setVisibleColumns,
     data,
     filters,
-    setFilter,
-    getFilterElement
+    setFilter
   } = usePersonnelStore()
+
+  const filterMap = {
+    name: 'text',
+    role: 'select'
+  }
 
   const getUniqueValues = (key) => {
     const values = data.map((item) => item[key])
@@ -93,15 +98,15 @@ export default function PersonnelTableHeader() {
       </div>
 
       <div className='px-2 py-1 flex-wrap items-center space-x-2'>
-        {columns.map((col) => (
-          <div key={col.key} className="inline-block">
-            {getFilterElement(
-              col.key,
-              col.key === 'department' || col.key === 'role' ? 'select' : 'text',
-              filters[col.key],
-              (val) => setFilter(col.key, val),
-              getUniqueValues(col.key)
-            )}
+        {Object.entries(filterMap).map(([key, type]) => (
+          <div key={key} className="inline-block">
+            <TableFilter
+              name={key}
+              type={type}
+              value={filters[key]}
+              onChange={(val) => setFilter(key, val)}
+              options={type === 'select' ? getUniqueValues(key) : []}
+            />
           </div>
         ))}
       </div>

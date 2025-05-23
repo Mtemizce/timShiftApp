@@ -1,6 +1,6 @@
 // ✅ frontend/modules/Personnel/components/Topbar.jsx (revize: kolon bazlı filtre desteği)
 import { useNavigate } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Plus, FileStack } from 'lucide-react'
 
 export default function Topbar() {
   const navigate = useNavigate()
@@ -14,10 +14,18 @@ export default function Topbar() {
         
         <button
           onClick={() => navigate('/personnel/add')}
-          className="p-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+          className="p-2 rounded bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
           title="Yeni Personel Ekle"
         >
           <Plus className="w-4 h-4" />
+        </button>
+
+         <button
+          onClick={() => navigate('/personnel/add-multiple')}
+          className="p-2 rounded bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+          title="Excel ile Çoklu Ekle"
+        >
+          <FileStack className="w-4 h-4" />
         </button>
       </div>
     </div>

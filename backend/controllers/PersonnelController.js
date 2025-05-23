@@ -68,7 +68,20 @@ const PersonnelController = {
       console.error('❌ Personel silme hatası:', err)
       res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
     }
+  },
+  importBulk: async (req, res) => {
+  try {
+    const rows = req.body.data
+    if (!Array.isArray(rows)) return res.status(400).json({ message: 'Geçersiz veri' })
+
+    const inserted = await PersonnelService.importMany(rows)
+    res.status(201).json({ message: 'Toplu personel eklendi', inserted })
+  } catch (err) {
+    console.error('❌ Toplu ekleme hatası:', err)
+    res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
   }
+}
+
 }
 
 export default PersonnelController

@@ -19,19 +19,7 @@ const MOCK_DATA = [
 export default function PersonnelIndex() {
   const [dropdownId, setDropdownId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const {
-    fullscreen,
-    setFullscreen,
-    searchText,
-    orderBy,
-    orderDirection,
-    columns,
-    visibleColumns,
-    data,
-    setData,
-    setOrderBy,
-    filters,
-  } = usePersonnelStore();
+  const { fullscreen, setFullscreen, searchText, orderBy, orderDirection, columns, visibleColumns, data, setData, setOrderBy, filters } = usePersonnelStore();
 
   const tableRef = useRef();
 
@@ -56,25 +44,22 @@ export default function PersonnelIndex() {
   }, [setFullscreen]);
 
   const filteredData = useMemo(() => {
-    let filtered = data.filter((person) =>
-      Object.values(person).some((val) =>
-        String(val).toLowerCase().includes(searchText.toLowerCase())
-      )
-    );
+    let filtered = data.filter((person) => Object.values(person).some((val) => String(val).toLowerCase().includes(searchText.toLowerCase())));
 
     Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        filtered = filtered.filter((item) => String(item[key]) === value);
-      }
+      if (!value) return;
+      filtered = filtered.filter((item) => {
+        const cell = String(item[key] || "").toLowerCase();
+        const search = String(value).toLowerCase();
+        return search.length > 0 && cell.includes(search);
+      });
     });
 
     if (!orderBy) return filtered;
     return filtered.sort((a, b) => {
       const valA = String(a[orderBy] || "");
       const valB = String(b[orderBy] || "");
-      return orderDirection === "asc"
-        ? valA.localeCompare(valB)
-        : valB.localeCompare(valA);
+      return orderDirection === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
     });
   }, [searchText, orderBy, orderDirection, data, filters]);
 
@@ -97,36 +82,19 @@ export default function PersonnelIndex() {
               {columns.map(
                 ({ key, label }) =>
                   visibleColumns.includes(key) && (
-                    <th
-                      key={key}
-                      onClick={() => setOrderBy(key)}
-                      className="p-2 capitalize cursor-pointer hover:underline"
-                    >
+                    <th key={key} onClick={() => setOrderBy(key)} className="p-2 capitalize cursor-pointer hover:underline">
                       {label}
-                      {orderBy === key &&
-                        (orderDirection === "asc" ? (
-                          <ArrowDownAZ className="w-3 h-3 inline ml-1" />
-                        ) : (
-                          <ArrowDownZA className="w-3 h-3 inline ml-1" />
-                        ))}
+                      {orderBy === key && (orderDirection === "asc" ? <ArrowDownAZ className="w-3 h-3 inline ml-1" /> : <ArrowDownZA className="w-3 h-3 inline ml-1" />)}
                     </th>
                   )
               )}
               <th className="p-2 text-right">İşlemler</th>
             </tr>
           </thead>
-          <PersonnelTableBody
-            data={filteredData}
-            dropdownId={dropdownId}
-            setDropdownId={setDropdownId}
-          />
+          <PersonnelTableBody data={filteredData} dropdownId={dropdownId} setDropdownId={setDropdownId} />
         </table>
 
-        <PersonnelTablePagination
-          total={filteredData.length}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        <PersonnelTablePagination total={filteredData.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
     </div>
   );
