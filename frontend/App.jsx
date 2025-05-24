@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from './store'
 
-import Login from './modules/Auth/Login'
+import Login from './modules/Auth/pages/Login'
 import Dashboard from './modules/Dashboard/Dashboard'
 import AdminLayout from './layouts/AdminLayout'
 import PersonnelIndex from './modules/Personnel/Index'
