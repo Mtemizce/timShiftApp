@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as XLSX from 'xlsx'
-import Swal from 'sweetalert2'
+import { notify } from '@/utils/notify'
 
 export default function AddMultiplePersonnel() {
   const navigate = useNavigate()
@@ -37,7 +37,7 @@ export default function AddMultiplePersonnel() {
   }
 
   const handleSubmit = async () => {
-    if (!parsedData.length) return Swal.fire('Uyarı', 'Geçerli bir dosya yükleyin', 'warning')
+    if (!parsedData.length) return notify('Uyarı', 'Lütfen önce bir dosya yükleyin', { toastr: true, duration: 3000, icon: 'warning' })
 
     try {
       const res = await fetch('/api/personnel/import', {
@@ -52,11 +52,11 @@ export default function AddMultiplePersonnel() {
       if (!res.ok) throw new Error('Hatalı veri gönderimi')
       const result = await res.json()
 
-      Swal.fire('Başarılı', `${result.inserted} personel başarıyla eklendi`, 'success')
+      notify('Başarılı', `${result.inserted} personel başarıyla eklendi`, { toastr: true, duration: 3000, icon: 'success' })
         .then(() => navigate('/personnel'))
     } catch (err) {
       console.error(err)
-      Swal.fire('Hata', 'Veriler işlenemedi', 'error')
+      notify('Hata', err.message || 'Veriler işlenemedi', { toastr: true, duration: 3000, icon: 'error' })
     }
   }
 

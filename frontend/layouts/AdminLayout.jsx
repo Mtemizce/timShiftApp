@@ -4,6 +4,8 @@ import { useAppStore } from '../store'
 import { useEffect, useState } from 'react'
 import Header from './partials/Header'
 import Sidebar from './partials/Sidebar'
+import 'sweetalert2/dist/sweetalert2.min.css'
+
 
 export default function AdminLayout() {
   const admin = useAppStore((state) => state.admin)
