@@ -1,11 +1,8 @@
-// ✅ frontend/modules/Definitions/pages/CreateForm.jsx
-
 import { useState } from "react"
 import { createDefinition } from "../services/definitionsService"
 import { notify } from "@/utils/notify"
 
-export default function CreateForm({ onSuccess }) {
-  const [type, setType] = useState("")
+export default function CreateForm({ onSuccess, type }) {
   const [key, setKey] = useState("")
 
   const handleSubmit = async (e) => {
@@ -21,18 +18,25 @@ export default function CreateForm({ onSuccess }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
-      <select value={type} onChange={(e) => setType(e.target.value)} className="input w-40">
-        <option value="">Tür Seç</option>
-        <option value="personnel_type">Görev</option>
-        <option value="department">Birim</option>
-        <option value="education">Eğitim</option>
-        <option value="size_pants">Pantolon</option>
-        <option value="size_tshirt">Tişört</option>
-        <option value="size_shoes">Ayakkabı</option>
-      </select>
-      <input value={key} onChange={(e) => setKey(e.target.value)} placeholder="Tanım Adı" className="input" />
-      <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow flex flex-col gap-4 h-fit"
+    >
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Yeni Tanım Ekle ({type.replace("_", " ")})
+        </label>
+        <input
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+          placeholder="Tanım adı girin..."
+          className="input w-full"
+        />
+      </div>
+      <button
+        type="submit"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium self-start"
+      >
         Ekle
       </button>
     </form>

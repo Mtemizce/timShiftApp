@@ -7,6 +7,7 @@ import AdminLayout from './layouts/AdminLayout'
 import PersonnelIndex from './modules/Personnel/Index'
 import AddPersonnel from './modules/Personnel/pages/addPersonnel'
 import AddMultiplePersonnel from './modules/Personnel/pages/addMultiplePersonnel'
+import Definitions from './modules/Definitions/Index'
 
 export default function App() {
   const admin = useAppStore((state) => state.admin)
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="personnel" element={<PersonnelIndex />} />
           <Route path="personnel/add" element={<AddPersonnel />} />
           <Route path="personnel/add-multiple" element={<AddMultiplePersonnel />} />
+          <Route path="definitions" element={<Definitions />} />
         </Route>
       ) : (
         <Route path="*" element={<Navigate to="/login" replace />} />
