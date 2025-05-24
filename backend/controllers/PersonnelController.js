@@ -4,12 +4,12 @@ import PersonnelService from '../services/PersonnelService.js'
 import PersonnelResource from '../resources/PersonnelResource.js'
 
 const PersonnelController = {
-  index: async (req, res) => {
+   index: async (req, res) => {
     try {
       const personnelList = await PersonnelService.getAll()
       res.json({
         message: 'Personel listesi',
-        data: personnelList.map(p => PersonnelResource(p))
+        data: personnelList.map(p => PersonnelResource(p)) // ✔️ frontend buna erişiyor
       })
     } catch (err) {
       console.error('❌ Personel listeleme hatası:', err)

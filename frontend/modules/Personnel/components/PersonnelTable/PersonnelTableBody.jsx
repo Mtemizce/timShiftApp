@@ -1,10 +1,9 @@
-// ✅ frontend/modules/Personnel/components/PersonnelTable/PersonnelTableBody.jsx (revize: dış tıklama kapatma + dark mode destekli)
 import { useEffect, useRef } from 'react'
 import { MoreHorizontal } from 'lucide-react'
 import usePersonnelStore from '@/store/personnel'
 
 export default function PersonnelTableBody({ data, dropdownId, setDropdownId }) {
-  const { visibleColumns } = usePersonnelStore()
+  const { visibleColumns, columns } = usePersonnelStore()
   const menuRef = useRef(null)
 
   useEffect(() => {
@@ -22,10 +21,15 @@ export default function PersonnelTableBody({ data, dropdownId, setDropdownId }) 
       {data.map((person, index) => (
         <tr key={person.id} className="border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
           <td className="p-2 text-sm">{index + 1}</td>
-          {visibleColumns.includes('name') && <td className="p-2 text-sm">{person.name}</td>}
-          {visibleColumns.includes('phone') && <td className="p-2 text-sm">{person.phone}</td>}
-          {visibleColumns.includes('department') && <td className="p-2 text-sm">{person.department}</td>}
-          {visibleColumns.includes('role') && <td className="p-2 text-sm">{person.role}</td>}
+
+          {columns.map(({ key }) => (
+            visibleColumns.includes(key) && (
+              <td key={key} className="p-2 text-sm">
+                {String(person[key] ?? '')}
+              </td>
+            )
+          ))}
+
           <td className="p-2 text-sm text-right relative">
             <button
               onClick={() => setDropdownId(dropdownId === person.id ? null : person.id)}
