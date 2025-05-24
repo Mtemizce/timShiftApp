@@ -1,5 +1,3 @@
-// ✅ frontend/modules/Definitions/Index.jsx (drag & drop dahil)
-
 import { useEffect, useState } from "react";
 import {
   fetchDefinitionsByType,
@@ -14,7 +12,8 @@ import {
   Trash2,
   Pencil,
   CheckCircle,
-  CircleOff
+  CircleOff,
+  GripVertical
 } from "lucide-react";
 
 import {
@@ -45,13 +44,21 @@ function SortableItem({ item, onEdit, onDelete, onToggle }) {
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md px-4 py-3 flex items-center justify-between shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
     >
-      <span className="font-medium text-gray-900 dark:text-white">
-        {item.key}
-      </span>
+      <div className="flex items-center gap-2">
+        <span
+          {...attributes}
+          {...listeners}
+          className="text-gray-400 hover:text-gray-600 cursor-grab"
+          title="Sürüklemek için tut"
+        >
+          <GripVertical className="w-4 h-4" />
+        </span>
+        <span className="font-medium text-gray-900 dark:text-white">
+          {item.key}
+        </span>
+      </div>
       <div className="flex gap-3 items-center">
         <button onClick={() => onToggle(item)}>
           <CheckCircle className="w-5 h-5 text-green-500 hover:text-green-600 cursor-pointer" />
@@ -172,7 +179,6 @@ export default function DefinitionIndex() {
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-6">
-          {/* Aktif Grup (DnD) */}
           {activeItems.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
@@ -199,7 +205,6 @@ export default function DefinitionIndex() {
             </div>
           )}
 
-          {/* Pasif Grup */}
           {pasifList.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 mt-4">
