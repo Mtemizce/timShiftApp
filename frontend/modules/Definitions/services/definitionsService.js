@@ -64,6 +64,15 @@ export const toggleDefinitionActive = async (id, active) => {
   if (!res.ok) throw new Error(data.message || "Durum güncellenemedi");
   return data;
 };
-
+export const getDefinitions = async () => {
+  const res = await fetch("/api/definitions", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.message || "Tanımlar alınamadı")
+  return data
+}
 
 

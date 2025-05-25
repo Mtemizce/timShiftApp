@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { personnelColumns } from './personnelColumns'
 
 const usePersonnelStore = create((set) => ({
   searchText: "",
@@ -9,30 +10,7 @@ const usePersonnelStore = create((set) => ({
   filters: {},
 
   data: [],
-  columns: [
-    { key: "name", label: "Ad Soyad" },
-    { key: "phone", label: "Telefon" },
-    { key: "department", label: "Departman" },
-    { key: "role", label: "Görev" },
-    { key: "tc_no", label: "TC Kimlik No" },
-    { key: "birth_date", label: "Doğum Tarihi" },
-    { key: "marital_status", label: "Medeni Durum" },
-    { key: "criminal_record", label: "Adli Sicil" },
-    { key: "education_level", label: "Eğitim" },
-    { key: "children_count", label: "Çocuk Sayısı" },
-    { key: "driving_license", label: "Ehliyet" },
-    { key: "iban", label: "IBAN" },
-    { key: "start_date", label: "İşe Giriş" },
-    { key: "end_date", label: "Çıkış Tarihi" },
-    { key: "certificates", label: "Sertifikalar" },
-    { key: "address", label: "Adres" },
-    { key: "email", label: "Email" },
-    { key: "size_pants", label: "Pantolon" },
-    { key: "size_tshirt", label: "Tişört" },
-    { key: "size_coat", label: "Mont" },
-    { key: "size_shoes", label: "Ayakkabı" },
-    { key: "image_file", label: "Fotoğraf" }
-  ],
+  columns: personnelColumns,
 
   setData: (newData) => set({ data: newData }),
 

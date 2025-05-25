@@ -4,3 +4,37 @@
 .input {
   @apply w-full border rounded p-2 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 placeholder:text-gray-400;
 }
+
+/* Rapor Ekranı ReportTable Stilleri */
+ 
+.reportTableHeadTr {
+  @apply font-bold uppercase text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-800;
+}
+.reportTableHeadTh {
+  @apply px-4 py-3 text-center font-bold border-collapse border border-gray-400 dark:border-gray-700  whitespace-nowrap;
+}
+ 
+.reportTableBodyTr {
+  @apply  font-semibold text-gray-600 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-300 
+  bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700;
+  }
+.reportTableBodyTd {
+  @apply px-2 py-2 text-center whitespace-nowrap border-collapse border border-gray-200 dark:border-gray-800;
+}
+
+/* Report Tabs Title */
+.reportTabsDiv {
+  @apply flex flex-wrap border-b border-gray-300 dark:border-gray-600;
+}
+.reportTabsBtn {
+  @apply flex justify-between align-middle space-x-2 py-2 px-4 text-sm font-medium cursor-pointer;
+}
+.reportTabsBtnActive {
+  @apply border-b-2 border-blue-600 text-blue-600;
+}
+.reportTabsBtnNormal {
+  @apply text-gray-500 hover:text-blue-700;
+}
+.reportGetBtn {
+  @apply font-bold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm cursor-pointer transition-colors duration-300;
+}

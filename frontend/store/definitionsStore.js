@@ -1,6 +1,6 @@
 // frontend/store/definitionsStore.js
 import { create } from 'zustand'
-import { getDefinitions } from '../modules/Definitions/services/definitionService'
+import { getDefinitions } from '../modules/Definitions/services/definitionsService'
 
 export const useDefinitionsStore = create((set) => ({
   definitions: [],

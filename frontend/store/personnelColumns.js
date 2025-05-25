@@ -1,0 +1,26 @@
+// frontend/store/personnelColumns.js
+
+export const personnelColumns = [
+  { key: "name", label: "Ad Soyad", type: "text" },
+  { key: "phone", label: "Telefon", type: "text" },
+  { key: "department", label: "Departman", type: "text" },
+  { key: "role", label: "Görev", type: "select", dynamic: true },
+  { key: "tc_no", label: "TC Kimlik No", type: "text" },
+  { key: "birth_date", label: "Doğum Tarihi", type: "date" },
+  { key: "marital_status", label: "Medeni Durum", type: "select", dynamic: true },
+  { key: "criminal_record", label: "Adli Sicil", type: "select", dynamic: true  },
+  { key: "education_level", label: "Eğitim", type: "select", dynamic: true  },
+  { key: "children_count", label: "Çocuk Sayısı", type: "text" },
+  { key: "driving_license", label: "Ehliyet", type: "text" },
+  { key: "iban", label: "IBAN", type: "text" },
+  { key: "start_date", label: "İşe Giriş", type: "date" },
+  { key: "end_date", label: "Çıkış Tarihi", type: "date" },
+  { key: "certificates", label: "Sertifikalar", type: "text" },
+  { key: "address", label: "Adres", type: "text" },
+  { key: "email", label: "Email", type: "text" },
+  { key: "size_pants", label: "Pantolon", type: "select", dynamic: true },
+  { key: "size_tshirt", label: "Tişört", type: "select", dynamic: true },
+  { key: "size_coat", label: "Mont", type: "select", dynamic: true },
+  { key: "size_shoes", label: "Ayakkabı", type: "select", dynamic: true },
+  { key: "image_file", label: "Fotoğraf", type: "text" },
+];
