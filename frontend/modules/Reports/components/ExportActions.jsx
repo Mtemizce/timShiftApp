@@ -1,5 +1,5 @@
 import { exportToExcel } from "../utils/exportExcel";
-import { exportToPrint } from "../utils/exportPrint";
+import { exportToPrint } from "./exportPrint";
 
 import { FileText, FileDown, Printer } from "lucide-react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -32,7 +32,7 @@ export default function ExportActions({ data, selectedColumns, columnLabels, cus
       <button title="Excel" className="hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded cursor-pointer" onClick={() => exportToExcel(data, selectedColumns, columnLabels, customPageTitle)}>
         <FileDown size={18} />
       </button>
-      <button title="Yazdır" className="hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded cursor-pointer" onClick={() => exportToPrint(data, selectedColumns, columnLabels, customPageTitle)}>
+      <button title="Yazdır" className="hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded cursor-pointer" onClick={() => exportToPrint(data, selectedColumns, columnLabels, customPageTitle, pageOptions)}>
         <Printer size={18} />
       </button>
     </div>

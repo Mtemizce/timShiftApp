@@ -1,120 +1,135 @@
 // frontend/modules/Reports/components/PersonnelReportPDF.jsx
-import { Document, Page, Text, View, StyleSheet, Font, Image } from "@react-pdf/renderer"
-import { useEffect } from "react"
-import font from "../../../../public/fonts/Roboto-Regular.ttf"
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  Font
+} from '@react-pdf/renderer'
+import font from '../../../../public/fonts/Roboto-Regular.ttf'
+
+Font.register({ family: 'Roboto', src: font })
 
 const styles = StyleSheet.create({
   page: {
-    padding: 14,
-    fontSize: 10,
-    fontFamily: "Roboto",
+    fontFamily: 'Roboto',
+    fontSize: 9,
+    padding: 20,
   },
-  title: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 2,
-    marginTop: 2,
+  titleBlock: {
+    marginBottom: 8,
+    padding: 6,
+  },
+  titleText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   table: {
-    display: "table",
-    width: "auto",
-    marginTop: 15,
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
   },
-  row: {
-    flexDirection: "row",
+  tableRow: {
+    flexDirection: 'row',
   },
-  headerCell: {
-    padding: 4,
-    backgroundColor: "#eeeeee",
-    fontWeight: "bold",
-    border: "1px solid #333",
-    textAlign: "center",
-    textTransform: "uppercase",
+  tableHeader: {
+    backgroundColor: '#d9d9d9',
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#bfbfbf',
+    padding: 5,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 9,
   },
-  cell: {
-    padding: 4,
-    border: "1px solid #ccc",
-    textAlign: "center",
+  tableCell: {
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#bfbfbf',
+    padding: 5,
+    textAlign: 'center',
+    fontSize: 8,
   },
-  image: {
-    width: 100,
-    height: 100,
-    marginBottom: 2,
-    marginLeft: "auto",
-    marginRight: "auto",
+  zebraRow: {
+    backgroundColor: '#f3f3f3',
   },
   footer: {
-    marginTop: 10,
-    fontSize: 10,
-    textAlign: "left",
-  }
+    marginTop: 20,
+    fontSize: 8,
+  },
 })
 
-const PersonnelReportPDF = ({ data, selectedColumns, columnLabels, customPageTitle, pageOptions }) => {
-  useEffect(() => {
-    Font.register({
-      family: "Roboto",
-      src: font,
-      fontStyle: "normal",
-      fontWeight: "normal",
-    })
-  }, [])
+const PersonnelReportPDF = ({ data = [], selectedColumns = [], columnLabels = {}, customPageTitle = '', pageOptions = {} }) => {
+  const orientation = pageOptions?.orientation || 'portrait'
 
-  const now = new Date().toLocaleString("tr-TR")
-  const user = JSON.parse(localStorage.getItem("admin") || "{}")?.name || "Bilinmeyen Kullanıcı"
+  const titleText = typeof customPageTitle === 'object' ? customPageTitle.text : (customPageTitle || '')
+  const bgColor = customPageTitle?.bgColor || '#FFFFFF'
+  const textColor = customPageTitle?.textColor || '#000000'
+  const align = customPageTitle?.align || 'center'
+  const fontSize = customPageTitle?.fontSize || 14
+  const fontWeight = customPageTitle?.bold ? 'bold' : 'normal'
+
+  const columnWidths = selectedColumns.map(key => {
+    const len = (columnLabels[key] || key).length
+    return len > 15 ? 2 : 1
+  })
+  const totalUnits = columnWidths.reduce((a, b) => a + b, 0)
 
   return (
     <Document>
-      <Page size="A4" orientation={pageOptions.orientation || "portrait"} style={styles.page}>
-        <Text
-          style={{ position: "absolute", top: 10, marginBottom: 30, right: 20, fontSize: 10 }}
+      <Page size="A4" style={styles.page} orientation={orientation}>
+        {/* Tek parça başlık bloğu */}
+        <View
+          style={{
+            ...styles.titleBlock,
+            backgroundColor: bgColor,
+            color: textColor,
+            textAlign: align,
+          }}
         >
-          {now}
-        </Text>
-
-        {pageOptions?.showLogo && <Image style={styles.image} src="https://placehold.co/100x100" />}
-
-        {customPageTitle?.showTitle && customPageTitle.text && (
-          <Text
-            style={{
-              ...styles.title,
-              textAlign: customPageTitle.align,
-              fontSize: customPageTitle.fontSize || 14,
-              color: customPageTitle.textColor || "#000000",
-              backgroundColor: customPageTitle.bgColor || "#ffffff",
-            }}
-          >
-            {customPageTitle.text}
+          <Text style={{
+            ...styles.titleText,
+            fontSize,
+            fontWeight,
+            color: textColor,
+          }}>
+            {titleText.replace(/\n/g, ' \n ')}
           </Text>
-        )}
+        </View>
 
         <View style={styles.table}>
-          <View style={styles.row}>
+          <View style={styles.tableRow}>
             {selectedColumns.map((col, i) => (
               <Text
                 key={i}
-                style={{ ...styles.headerCell, width: `${100 / selectedColumns.length}%` }}
+                style={[styles.tableHeader, {
+                  width: `${(columnWidths[i] / totalUnits) * 100}%`
+                }]}
               >
-                {columnLabels[col] ?? col}
+                {columnLabels[col] || col}
               </Text>
             ))}
           </View>
 
           {data.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
+            <View key={rowIndex} style={[styles.tableRow, rowIndex % 2 === 1 && styles.zebraRow]}>
               {selectedColumns.map((col, colIndex) => {
                 const val = row[col]
-                const isDate = typeof val === "string" && /^\d{4}-\d{2}-\d{2}T/.test(val)
-                const text = isDate
-                  ? `${new Date(val).getDate()}.${new Date(val).getMonth() + 1}.${new Date(val).getFullYear()}`
-                  : val ?? "-"
-
+                const isDate = typeof val === 'string' && /^\d{4}-\d{2}-\d{2}/.test(val)
+                const formatted = isDate ? new Date(val).toLocaleDateString('tr-TR') : val ?? ''
                 return (
                   <Text
                     key={colIndex}
-                    style={{ ...styles.cell, width: `${100 / selectedColumns.length}%` }}
+                    style={[styles.tableCell, {
+                      width: `${(columnWidths[colIndex] / totalUnits) * 100}%`
+                    }]}
                   >
-                    {text}
+                    {formatted}
                   </Text>
                 )
               })}
@@ -123,15 +138,10 @@ const PersonnelReportPDF = ({ data, selectedColumns, columnLabels, customPageTit
         </View>
 
         <View style={styles.footer}>
-          <Text>Çıktı Alan: {user}</Text>
-          <Text>Tarih: {now}</Text>
+          <Text>Düzenleyen: {JSON.parse(localStorage.getItem('admin') || '{}')?.name || 'Bilinmeyen Kullanıcı'}</Text>
+          <Text>Tarih: {new Date().toLocaleString('tr-TR')}</Text>
           <Text>Toplam Kayıt: {data.length}</Text>
         </View>
-
-        <Text
-          style={{ position: "absolute", bottom: 10, textAlign: "center", fontSize: 10, left: 0, right: 0 }}
-          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
-        />
       </Page>
     </Document>
   )
