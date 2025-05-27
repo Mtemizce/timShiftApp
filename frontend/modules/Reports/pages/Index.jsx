@@ -8,7 +8,6 @@ import ReportTable from '../components/ReportTable'
 import { personnelColumns } from '@/store/personnelColumns'
 import { Home, ListFilter, BookType, Columns3Cog } from 'lucide-react'
 
-
 const labelToKeyMap = Object.fromEntries(personnelColumns.map((col) => [col.label, col.key]))
 const columnKeys = personnelColumns.map((col) => col.key)
 
@@ -46,7 +45,6 @@ export default function ReportsIndex() {
       })
       const json = await res.json()
       const result = json.data || []
-   
 
       if (!conditions.length) return setFilteredData(result)
 
@@ -54,17 +52,29 @@ export default function ReportsIndex() {
         conditions.every((cond) => {
           const key = labelToKeyMap[cond.field]
           const val = row[key]
-          const search = cond.value?.toLowerCase()
-          if (!key || val == null) return false
+          const op = cond.operator || '='
+          const target = cond.value
 
-          if (typeof val === 'string' && val.includes('T')) {
-            const formatted = new Date(val).toLocaleDateString('tr-TR')
-            return formatted.includes(search)
+          if (!key || val == null || target == null) return false
+
+          const parseVal = (v) => {
+            if (typeof v === 'string' && v.includes('T')) return new Date(v)
+            if (!isNaN(v)) return Number(v)
+            return v
           }
 
-          if (typeof val === 'string') return val.toLowerCase().includes(search)
-          if (typeof val === 'number') return val.toString().includes(search)
-          return false
+          const a = parseVal(val)
+          const b = parseVal(target)
+
+          switch (op) {
+            case '=': return a == b
+            case '!=': return a != b
+            case '>': return a > b
+            case '>=': return a >= b
+            case '<': return a < b
+            case '<=': return a <= b
+            default: return false
+          }
         })
       )
 

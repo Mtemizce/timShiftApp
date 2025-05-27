@@ -28,7 +28,7 @@ export default function Conditions({ conditions, setConditions }) {
   })
 
   const handleAdd = () => {
-    setConditions([...conditions, { field: '', value: '' }])
+    setConditions([...conditions, { field: '', operator: '=', value: '' }])
   }
 
   const handleRemove = (index) => {
@@ -50,6 +50,7 @@ export default function Conditions({ conditions, setConditions }) {
           const selectedCol = enrichedColumns.find((c) => c.label === cond.field)
           return (
             <div key={index} className="flex gap-2 items-center justify-around">
+              {/* Alan Seçimi */}
               <select
                 className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                 value={cond.field}
@@ -63,6 +64,21 @@ export default function Conditions({ conditions, setConditions }) {
                 ))}
               </select>
 
+              {/* Operatör Seçimi */}
+              <select
+                className="w-24 border border-gray-300 rounded px-2 py-1 text-sm"
+                value={cond.operator || '='}
+                onChange={(e) => handleChange(index, 'operator', e.target.value)}
+              >
+                <option value="=">=</option>
+                <option value=">">&gt;</option>
+                <option value=">=">&ge;</option>
+                <option value="<">&lt;</option>
+                <option value="<=">&le;</option>
+                <option value="!=">&ne;</option>
+              </select>
+
+              {/* Değer Seçimi */}
               {selectedCol?.type === 'select' ? (
                 <select
                   className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
