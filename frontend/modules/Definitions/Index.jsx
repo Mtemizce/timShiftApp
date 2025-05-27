@@ -170,6 +170,7 @@ export default function DefinitionIndex() {
         >
           <option value="personnel_type">Görev</option>
           <option value="department">Birim</option>
+          <option value="size_shoes">Askerlik Durumu</option>
           <option value="education">Eğitim</option>
           <option value="size_pants">Pantolon</option>
           <option value="size_tshirt">Tişört</option>

@@ -11,6 +11,7 @@ const Personnel = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
+    registry: DataTypes.INTEGER, // Şirket Sicil No
     name: DataTypes.STRING,
     tc_no: {
       type: DataTypes.STRING,
@@ -18,6 +19,8 @@ const Personnel = sequelize.define(
       allowNull: false,
     },
     birth_date: DataTypes.DATEONLY,
+    hasDisability: DataTypes.BOOLEAN, // engelli durumu (evet/hayır)
+    militaryStatus: DataTypes.STRING, // askerlik durumu (yaptı/yapmadı/muaf/tecilli)
     address: DataTypes.TEXT,
     phone: DataTypes.STRING,
     email: DataTypes.STRING,

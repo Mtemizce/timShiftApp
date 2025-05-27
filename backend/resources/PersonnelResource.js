@@ -1,8 +1,11 @@
 const PersonnelResource = (personnel) => ({
   id: personnel.id,
-  name: personnel.name,
   tc_no: personnel.tc_no,
+  registry: personnel.registry,
+  name: personnel.name,
   birth_date: personnel.birth_date,
+  hasDisability: personnel.hasDisability,
+  militaryStatus: personnel.militaryStatus,
   address: personnel.address,
   phone: personnel.phone,
   email: personnel.email,
