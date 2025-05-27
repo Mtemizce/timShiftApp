@@ -1,6 +1,12 @@
 import Definition from "../models/Definition.js";
 
 const DefinitionService = {
+  getAll: async () => {
+  return await Definition.findAll({
+    order: [["type", "ASC"], ["order", "ASC"]],
+  });
+},
+
   getByType: async (type, onlyActive = false) => {
     const where = { type };
     if (onlyActive) where.active = true;

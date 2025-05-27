@@ -1,7 +1,23 @@
 import DefinitionService from "../services/DefinitionService.js";
 import DefinitionResource from "../resources/DefinitionResource.js";
 
+
 const DefinitionController = {
+getAll: async (req, res) => {
+  try {
+    const list = await DefinitionService.getAll();
+    res.json({
+      message: "Tüm tanımlar listelendi",
+      data: list.map(DefinitionResource),
+    });
+  } catch (err) {
+    console.error("Tanımlar alınamadı:", err);
+    res.status(500).json({ message: "Tanımlar alınamadı", error: err.message });
+  }
+},
+
+
+
   getByType: async (req, res) => {
     try {
       const { type } = req.params;

@@ -1,43 +1,52 @@
-import DefinitionController from '../controllers/DefinitionController.js'
-import { authenticateToken } from '../middleware/authMiddleware.js'
-import { logActivityMiddleware } from '../middleware/logMiddleware.js'
+import DefinitionController from "../controllers/DefinitionController.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
+import { logActivityMiddleware } from "../middleware/logMiddleware.js";
 
 export default [
+   {
+    method: "get",
+    path: "/",
+    handler: DefinitionController.getAll,
+    permission: "definition.view",
+    middlewares: [authenticateToken, logActivityMiddleware("definition", "get")],
+  },
+
   {
-    method: 'get',
-    path: '/:type',
+    method: "get",
+    path: "/:type",
     handler: DefinitionController.getByType,
-    permission: 'definition.view',
-    middlewares: [authenticateToken, logActivityMiddleware('definition', 'get')]
+    permission: "definition.view",
+    middlewares: [authenticateToken, logActivityMiddleware("definition", "get")],
   },
+
   {
-    method: 'post',
-    path: '/',
+    method: "post",
+    path: "/",
     handler: DefinitionController.store,
-    permission: 'definition.create',
+    permission: "definition.create",
     middlewares: [
       authenticateToken,
-      logActivityMiddleware('definition', 'create')
-    ]
+      logActivityMiddleware("definition", "create"),
+    ],
   },
   {
-    method: 'put',
-    path: '/:id',
+    method: "put",
+    path: "/:id",
     handler: DefinitionController.update,
-    permission: 'definition.update',
+    permission: "definition.update",
     middlewares: [
       authenticateToken,
-      logActivityMiddleware('definition', 'update')
-    ]
+      logActivityMiddleware("definition", "update"),
+    ],
   },
   {
-    method: 'delete',
-    path: '/:id',
+    method: "delete",
+    path: "/:id",
     handler: DefinitionController.destroy,
-    permission: 'definition.delete',
+    permission: "definition.delete",
     middlewares: [
       authenticateToken,
-      logActivityMiddleware('definition', 'delete')
-    ]
-  }
-]
+      logActivityMiddleware("definition", "delete"),
+    ],
+  },
+];
