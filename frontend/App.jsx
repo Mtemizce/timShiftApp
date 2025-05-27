@@ -9,6 +9,8 @@ import AddPersonnel from './modules/Personnel/pages/addPersonnel'
 import AddMultiplePersonnel from './modules/Personnel/pages/addMultiplePersonnel'
 import Definitions from './modules/Definitions/Index'
 import PersonnelReports from './modules/Reports/pages/Index'
+import EditPersonnel from './modules/Personnel/pages/editPersonnel'
+
 
 export default function App() {
   const admin = useAppStore((state) => state.admin)
@@ -27,6 +29,7 @@ export default function App() {
           <Route path="personnel" element={<PersonnelIndex />} />
           <Route path="personnel/add" element={<AddPersonnel />} />
           <Route path="personnel/add-multiple" element={<AddMultiplePersonnel />} />
+          <Route path="personnel/edit/:id" element={<EditPersonnel />} />
           <Route path="definitions" element={<Definitions />} />
           <Route path="reports/personnel" element={<PersonnelReports />} />
         </Route>

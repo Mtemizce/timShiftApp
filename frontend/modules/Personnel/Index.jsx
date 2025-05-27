@@ -1,3 +1,4 @@
+// frontend/modules/Personnel/Index.jsx
 import { useEffect, useState, useMemo, useRef } from "react";
 import { Users, UserCheck, Truck, ArrowDownAZ, ArrowDownZA } from "lucide-react";
 import Topbar from "./components/Topbar";
@@ -21,17 +22,15 @@ export default function PersonnelIndex() {
     data,
     setOrderBy,
     filters,
-    getPersonnels, // zustand fonksiyonu
+    getPersonnels,
   } = usePersonnelStore();
 
   const tableRef = useRef();
 
-  // 🔄 VERİYİ BACKEND'DEN ÇEK
   useEffect(() => {
     getPersonnels();
   }, [getPersonnels]);
 
-  // ⛶ FULLSCREEN DESTEK
   useEffect(() => {
     if (fullscreen && tableRef.current?.requestFullscreen) {
       tableRef.current.requestFullscreen();
@@ -48,9 +47,12 @@ export default function PersonnelIndex() {
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, [setFullscreen]);
 
-  // 🔎 FİLTRE VE SIRALAMA
   const filteredData = useMemo(() => {
-    let filtered = data.filter((person) => Object.values(person).some((val) => String(val).toLowerCase().includes(searchText.toLowerCase())));
+    let filtered = data.filter((person) =>
+      Object.values(person).some((val) =>
+        String(val).toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
 
     Object.entries(filters).forEach(([key, value]) => {
       if (!value) return;
@@ -73,32 +75,38 @@ export default function PersonnelIndex() {
     <div className="space-y-6">
       <Topbar />
 
-      {/* 📊 WIDGET’LAR */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Widget title="Toplam Personel" value={data.length} icon={<Users />} color="bg-blue-600" />
         <Widget title="Aktif Personel" value={data.filter((p) => p.status === "active").length} icon={<UserCheck />} color="bg-green-600" />
         <Widget title="Şoför Sayısı" value={data.filter((p) => p.role?.toLowerCase() === "şoför").length} icon={<Truck />} color="bg-yellow-600" />
       </div>
 
-      {/* ✅ Wrapper + Header birlikte fullscreen yapılacak blok */}
-      <div id="personnel-table-block" ref={tableRef} className="bg-white dark:bg-gray-800 rounded shadow p-4">
+      <div id="personnel-table-block" ref={tableRef} className="bg-white dark:bg-gray-800 rounded shadow p-4 ">
         <PersonnelTableHeader />
 
-        <div id="table-wrapper" className="overflow-x-auto">
-          <table className="w-full text-sm">
+        <div id="table-wrapper" className="overflow-visible">
+          <table className="w-full text-sm ">
             <thead>
               <tr className="text-left bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
                 <th className="p-2">#</th>
                 {columns.map(
                   ({ key, label }) =>
                     visibleColumns.includes(key) && (
-                      <th key={key} onClick={() => setOrderBy(key)} className="p-2 capitalize cursor-pointer hover:underline">
+                      <th
+                        key={key}
+                        onClick={() => setOrderBy(key)}
+                        className="p-2 capitalize cursor-pointer hover:underline"
+                      >
                         {label}
-                        {orderBy === key && (orderDirection === "asc" ? <ArrowDownAZ className="w-3 h-3 inline ml-1" /> : <ArrowDownZA className="w-3 h-3 inline ml-1" />)}
+                        {orderBy === key &&
+                          (orderDirection === "asc" ? (
+                            <ArrowDownAZ className="w-3 h-3 inline ml-1" />
+                          ) : (
+                            <ArrowDownZA className="w-3 h-3 inline ml-1" />
+                          ))}
                       </th>
                     )
-                )}
-                <th className="p-2 text-right">İşlemler</th>
+                )}          
               </tr>
             </thead>
             <PersonnelTableBody data={filteredData} dropdownId={dropdownId} setDropdownId={setDropdownId} />
