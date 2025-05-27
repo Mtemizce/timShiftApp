@@ -8,7 +8,7 @@ export default function Topbar() {
 
   return (
     <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
-      <h3 className="text-lg font-semibold">Personeller</h3>
+      <h3 className="text-lg font-semibold">Personel Modülü</h3>
 
       <div className="flex flex-wrap gap-2 items-center">
         

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as XLSX from 'xlsx'
 import { notify } from '@/utils/notify'
+import Topbar from "./../components/Topbar";
 
 export default function AddMultiplePersonnel() {
   const navigate = useNavigate()
@@ -53,7 +54,7 @@ export default function AddMultiplePersonnel() {
       const result = await res.json()
 
       notify('Başarılı', `${result.inserted} personel başarıyla eklendi`, { toastr: true, duration: 3000, icon: 'success' })
-        .then(() => navigate('/personnel'))
+       navigate('/personnel')
     } catch (err) {
       console.error(err)
       notify('Hata', err.message || 'Veriler işlenemedi', { toastr: true, duration: 3000, icon: 'error' })
@@ -61,7 +62,10 @@ export default function AddMultiplePersonnel() {
   }
 
   return (
+    <>  
+       <Topbar />
     <div className="p-6 space-y-4">
+     
       <h2 className="text-xl font-semibold">Excel ile Çoklu Personel Ekle</h2>
 
       <div className="border rounded p-4 bg-white dark:bg-gray-800">
@@ -109,5 +113,6 @@ export default function AddMultiplePersonnel() {
         Kaydet ve Gönder
       </button>
     </div>
+    </>
   )
 }

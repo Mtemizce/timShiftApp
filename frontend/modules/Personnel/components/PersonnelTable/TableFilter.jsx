@@ -1,5 +1,5 @@
 // ✅ frontend/components/TableFilter.jsx
-export default function TableFilter({ type, value, onChange, options = [], name }) {
+export default function TableFilter({ type, value, onChange, options = [], name, label }) {
   const className = `filter_${type}_${name}`
 
   if (type === 'text') {
@@ -9,7 +9,7 @@ export default function TableFilter({ type, value, onChange, options = [], name 
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         className={`px-2 py-1 border rounded text-sm ${className}`}
-        placeholder="Ara..."
+        placeholder={`${label} ara`}
       />
     )
   }
@@ -21,7 +21,7 @@ export default function TableFilter({ type, value, onChange, options = [], name 
         onChange={(e) => onChange(e.target.value)}
         className={`px-2 py-1 border rounded text-sm ${className}`}
       >
-        <option value="">Seçiniz</option>
+        <option value="">{label}</option>
         {options.map((opt) => (
           <option key={opt} value={opt}>{opt}</option>
         ))}

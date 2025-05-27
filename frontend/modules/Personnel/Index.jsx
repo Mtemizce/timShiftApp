@@ -11,6 +11,8 @@ import usePersonnelStore from "@/store/personnel";
 export default function PersonnelIndex() {
   const [dropdownId, setDropdownId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   const {
     fullscreen,
     setFullscreen,
@@ -56,11 +58,28 @@ export default function PersonnelIndex() {
 
     Object.entries(filters).forEach(([key, value]) => {
       if (!value) return;
-      filtered = filtered.filter((item) => {
-        const cell = String(item[key] || "").toLowerCase();
-        const search = String(value).toLowerCase();
-        return search.length > 0 && cell.includes(search);
-      });
+
+      if (key === "yearRange") {
+        const now = new Date();
+        filtered = filtered.filter((item) => {
+          const date = new Date(item.start_date);
+          const years = (now - date) / (1000 * 60 * 60 * 24 * 365.25);
+
+          switch (value) {
+            case "0-1 yıl": return years >= 0 && years < 1;
+            case "1-5 yıl": return years >= 1 && years < 5;
+            case "5-10 yıl": return years >= 5 && years < 10;
+            case "10+ yıl": return years >= 10;
+            default: return true;
+          }
+        });
+      } else {
+        filtered = filtered.filter((item) => {
+          const cell = String(item[key] || "").toLowerCase();
+          const search = String(value).toLowerCase();
+          return search.length > 0 && cell.includes(search);
+        });
+      }
     });
 
     if (!orderBy) return filtered;
@@ -71,23 +90,39 @@ export default function PersonnelIndex() {
     });
   }, [searchText, orderBy, orderDirection, data, filters]);
 
+  const paginatedData = useMemo(() => {
+    if (itemsPerPage === -1) return filteredData;
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return filteredData.slice(start, end);
+  }, [filteredData, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    const tableWrapper = document.getElementById("table-wrapper");
+    if (tableWrapper) tableWrapper.scrollIntoView({ behavior: "smooth" });
+  }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Sayfa başı değiştirilince sayfa sıfırlanmalı
+  }, [itemsPerPage]);
+
   return (
     <div className="space-y-6">
       <Topbar />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Widget title="Toplam Personel" value={data.length} icon={<Users />} color="bg-blue-600" />
-        <Widget title="Aktif Personel" value={data.filter((p) => p.status === "active").length} icon={<UserCheck />} color="bg-green-600" />
-        <Widget title="Şoför Sayısı" value={data.filter((p) => p.role?.toLowerCase() === "şoför").length} icon={<Truck />} color="bg-yellow-600" />
+        <Widget title="Araç Arkası" value={data.filter((p) =>p.role?.toLocaleLowerCase("tr") === 'araç arkası').length} icon={<UserCheck />} color="bg-green-600" />
+        <Widget title="Şoför Sayısı" value={data.filter((p) => p.role?.toLocaleLowerCase("tr") === "şoför").length} icon={<Truck />} color="bg-yellow-600" />
       </div>
 
       <div id="personnel-table-block" ref={tableRef} className="bg-white dark:bg-gray-800 rounded shadow p-4 ">
-        <PersonnelTableHeader />
+        <PersonnelTableHeader itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
 
         <div id="table-wrapper" className="overflow-visible">
           <table className="w-full text-sm ">
             <thead>
-              <tr className="text-left bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+              <tr className="sticky -top-6 z-10 bg-gray-100 dark:bg-gray-700 text-left  text-gray-800 dark:text-gray-100">
                 <th className="p-2">#</th>
                 {columns.map(
                   ({ key, label }) =>
@@ -109,11 +144,16 @@ export default function PersonnelIndex() {
                 )}          
               </tr>
             </thead>
-            <PersonnelTableBody data={filteredData} dropdownId={dropdownId} setDropdownId={setDropdownId} />
+            <PersonnelTableBody data={paginatedData} dropdownId={dropdownId} setDropdownId={setDropdownId} />
           </table>
         </div>
 
-        <PersonnelTablePagination total={filteredData.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        <PersonnelTablePagination
+          total={itemsPerPage === -1 ? filteredData.length : filteredData.length}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          itemsPerPage={itemsPerPage}
+        />
       </div>
     </div>
   );

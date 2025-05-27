@@ -19,7 +19,7 @@ const Personnel = sequelize.define(
       allowNull: false,
     },
     birth_date: DataTypes.DATEONLY,
-    hasDisability: DataTypes.BOOLEAN, // engelli durumu (evet/hayır)
+    hasDisability: DataTypes.STRING, // engelli durumu (evet/hayır)
     militaryStatus: DataTypes.STRING, // askerlik durumu (yaptı/yapmadı/muaf/tecilli)
     address: DataTypes.TEXT,
     phone: DataTypes.STRING,

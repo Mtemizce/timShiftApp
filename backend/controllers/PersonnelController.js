@@ -3,6 +3,15 @@
 import PersonnelService from '../services/PersonnelService.js'
 import PersonnelResource from '../resources/PersonnelResource.js'
 
+const convertExcelDate = (value) => {
+  if (typeof value === 'number') {
+    const date = new Date((value - 25569) * 86400 * 1000)
+    return date.toISOString().split('T')[0]
+  }
+
+  return null // null, undefined, boş string vb. için
+}
+
 const PersonnelController = {
    index: async (req, res) => {
     try {
@@ -69,18 +78,24 @@ const PersonnelController = {
       res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
     }
   },
-  importBulk: async (req, res) => {
-  try {
-    const rows = req.body.data
-    if (!Array.isArray(rows)) return res.status(400).json({ message: 'Geçersiz veri' })
+   importBulk: async (req, res) => {
+    try {
+      const rows = req.body.data
+      if (!Array.isArray(rows)) {
+        return res.status(400).json({ message: 'Geçersiz veri' })
+      }
 
-    const inserted = await PersonnelService.importMany(rows)
-    res.status(201).json({ message: 'Toplu personel eklendi', inserted })
-  } catch (err) {
-    console.error('❌ Toplu ekleme hatası:', err)
-    res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      // ✅ Zaten middleware'de normalize edildi
+      const inserted = await PersonnelService.importMany(rows)
+
+      res.status(201).json({ message: 'Toplu personel eklendi', inserted })
+    } catch (err) {
+      console.error('❌ Toplu ekleme hatası:', err)
+      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+    }
   }
-}
+
+
 
 }
 

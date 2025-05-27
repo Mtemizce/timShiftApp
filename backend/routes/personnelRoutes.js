@@ -3,6 +3,8 @@ import { authenticateToken } from "../middleware/authMiddleware.js"
 import { logActivityMiddleware } from "../middleware/logMiddleware.js"
 import { validate } from "../middleware/validate.js"
 import { personnelRules } from "../validators/personnelValidator.js"
+import { normalizeExcelDates } from '../middleware/excelDateMiddleware.js'
+
 
 export default [
   {
@@ -60,6 +62,7 @@ export default [
     permission: "personnel.create",
     middlewares: [
       authenticateToken,
+      normalizeExcelDates,
       ...personnelRules.import,
       validate,
       logActivityMiddleware("personnel", "import")

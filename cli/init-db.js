@@ -5,8 +5,8 @@ import sequelize from '../backend/config/database.js'
 
 // Modeller
 
-import BlacklistToken from '../backend/models/BlacklistToken.js'
 import ActivityLog from '../backend/models/ActivityLog.js'
+import BlacklistToken from '../backend/models/BlacklistToken.js'
 import Personnel from '../backend/models/Personnel.js'
 import SystemConfig from '../backend/models/SystemConfig.js'
 import Definition from '../backend/models/Definition.js'

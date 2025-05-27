@@ -9,7 +9,8 @@ export const personnelRules = {
     body('criminal_record').optional().isString(),
     body('children_count').optional().isInt({ min: 0 }),
     body('start_date').optional().isISO8601().toDate(),
-    body('end_date').optional().isISO8601().toDate()
+    body('end_date').optional().isISO8601().toDate(),
+    body('data.*.birth_date').optional().isISO8601().toDate()
   ],
 
   update: [
@@ -18,7 +19,8 @@ export const personnelRules = {
     body('phone').optional().isString(),
     body('children_count').optional().isInt({ min: 0 }),
     body('start_date').optional().isISO8601().toDate(),
-    body('end_date').optional().isISO8601().toDate()
+    body('end_date').optional().isISO8601().toDate(),
+    body('data.*.birth_date').optional().isISO8601().toDate()
   ],
 
   import: [
@@ -29,6 +31,7 @@ export const personnelRules = {
     body('data.*.criminal_record').optional().isString(),
     body('data.*.children_count').optional().isInt({ min: 0 }),
     body('data.*.start_date').optional().isISO8601().toDate(),
-    body('data.*.end_date').optional().isISO8601().toDate()
+    body('data.*.end_date').optional().isISO8601().toDate(),
+    body('data.*.birth_date').optional().isISO8601().toDate()
   ]
 }
