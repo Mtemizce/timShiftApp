@@ -10,6 +10,7 @@ import AddMultiplePersonnel from './modules/Personnel/pages/addMultiplePersonnel
 import Definitions from './modules/Definitions/Index'
 import PersonnelReports from './modules/Reports/pages/Index'
 import EditPersonnel from './modules/Personnel/pages/editPersonnel'
+import Settings from './modules/Settings/Index'
 
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="personnel/edit/:id" element={<EditPersonnel />} />
           <Route path="definitions" element={<Definitions />} />
           <Route path="reports/personnel" element={<PersonnelReports />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       ) : (
         <Route path="*" element={<Navigate to="/login" replace />} />

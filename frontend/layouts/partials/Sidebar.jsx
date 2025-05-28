@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen }) {
         <NavLink to="/personnel" className={({ isActive }) => navClass(isActive)}><Users className="w-5 h-5"  /> Personel</NavLink>
         <NavLink to="/reports/personnel" className={({ isActive }) => navClass(isActive)} ><FileText className="w-5 h-5" /> Personel Raporu</NavLink>
         <NavLink to="/definitions" className={({ isActive }) => navClass(isActive)}><Variable className="w-5 h-5"  /> Tanımlar</NavLink>
-        <NavLink to="/config" className={({ isActive }) => navClass(isActive)}><Cog className="w-5 h-5"  /> Ayarlar</NavLink>
+        <NavLink to="/settings" className={({ isActive }) => navClass(isActive)}><Cog className="w-5 h-5"  /> Ayarlar</NavLink>
       </nav>
     </aside>
   )

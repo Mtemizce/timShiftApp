@@ -1,5 +1,6 @@
 const SystemConfigResource = (config) => ({
-  admin_session_minutes: config.admin_session_minutes,
+ admin_session_minutes: config.admin_session_minutes,
+  use_db_session_time: config.use_db_session_time,
   clear_blacklist_on_logout: config.clear_blacklist_on_logout,
   enable_backup: config.enable_backup,
   backup_interval_hours: config.backup_interval_hours,

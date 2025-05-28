@@ -1,19 +1,30 @@
-// ✅ backend/services/SystemConfigService.js
+// services/SystemConfigService.js
 
-import SystemConfig from '../models/SystemConfig.js'
+const db = require("../models");
+const SystemConfigResource = require("../resources/SystemConfigResource");
 
-const SystemConfigService = {
-  get: async () => {
-    const config = await SystemConfig.findOne()
-    return config
-  },
+const getSystemConfig = async () => {
+  const config = await db.SystemConfig.findOne();
+  return new SystemConfigResource(config);
+};
 
-  update: async (data) => {
-    const config = await SystemConfig.findOne()
-    if (!config) throw new Error('Sistem ayarları bulunamadı')
-    await config.update(data)
-    return config
-  }
-}
+const updateSystemConfig = async (data) => {
+  const config = await db.SystemConfig.findOne();
+  await config.update(data);
+  return new SystemConfigResource(config);
+};
 
-export default SystemConfigService
+const getSessionConfig = async () => {
+  const config = await db.SystemConfig.findOne();
+  return {
+    sessionTime: config.use_db_session_time
+      ? config.admin_session_minutes
+      : parseInt(process.env.SESSION_TIMEOUT_MINUTES || "30"),
+  };
+};
+
+module.exports = {
+  getSystemConfig,
+  updateSystemConfig,
+  getSessionConfig,
+};
