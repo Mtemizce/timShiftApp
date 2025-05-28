@@ -10,7 +10,7 @@ import AddMultiplePersonnel from './modules/Personnel/pages/addMultiplePersonnel
 import Definitions from './modules/Definitions/Index'
 import PersonnelReports from './modules/Reports/pages/Index'
 import EditPersonnel from './modules/Personnel/pages/editPersonnel'
-import Settings from './modules/Settings/Index'
+import Settings from './modules/Settings/SettingsPage'
 
 
 export default function App() {

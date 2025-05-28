@@ -1,24 +1,15 @@
-export const getSystemConfig = async () => {
-  const res = await fetch("/api/system-config", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  })
-  const json = await res.json()
-  return json.data
+export const fetchSystemConfigs = async () => {
+  const res = await fetch('/api/system-config')
+  if (!res.ok) throw new Error('Failed')
+  return res.json()
 }
 
-export const updateSystemConfig = async (payload) => {
-  const res = await fetch("/api/system-config", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify(payload),
+export const updateSystemConfigs = async (items) => {
+  const res = await fetch('/api/system-config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items }),
   })
-
-  const json = await res.json()
-  if (!res.ok) throw new Error(json.message || "Sunucu hatası")
-  return json.data
+  if (!res.ok) throw new Error('Failed')
+  return res.json()
 }
