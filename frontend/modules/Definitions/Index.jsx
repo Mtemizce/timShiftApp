@@ -168,7 +168,7 @@ export default function DefinitionIndex() {
           onChange={(e) => setType(e.target.value)}
           className="input w-full md:w-60"
         >
-          <option value="personnel_type">Görev</option>
+          <option value="role">Görev</option>
           <option value="department">Birim</option>
           <option value="militaryStatus">Askerlik Durumu</option>
           <option value="education_level">Eğitim</option>

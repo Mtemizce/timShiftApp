@@ -4,6 +4,7 @@ import { logActivityMiddleware } from "../middleware/logMiddleware.js"
 import { validate } from "../middleware/validate.js"
 import { personnelRules } from "../validators/personnelValidator.js"
 import { normalizeExcelDates } from '../middleware/excelDateMiddleware.js'
+import { uploadPersonnelPhoto } from "../middleware/uploadPhotoMiddleware.js";
 
 
 export default [
@@ -28,6 +29,7 @@ export default [
     permission: "personnel.create",
     middlewares: [
       authenticateToken,
+      uploadPersonnelPhoto,
       ...personnelRules.create,
       validate,
       logActivityMiddleware("personnel", "create")
@@ -40,6 +42,7 @@ export default [
     permission: "personnel.update",
     middlewares: [
       authenticateToken,
+      uploadPersonnelPhoto,
       ...personnelRules.update,
       validate,
       logActivityMiddleware("personnel", "update")

@@ -1,10 +1,12 @@
-// ✅ frontend/modules/Personnel/components/PersonnelTableBody.jsx (revize: giriş tarihi + kıdem + telefon formatlama)
-import { useEffect, useRef, useState } from "react";
+// ✅ PersonnelTableBody.jsx (sadece güncelle yönlendirmesi için düzenlendi)
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import usePersonnelStore from "@/store/personnel";
 
 export default function PersonnelTableBody({ data }) {
   const { visibleColumns, columns } = usePersonnelStore();
   const [contextMenu, setContextMenu] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const close = () => setContextMenu(null);

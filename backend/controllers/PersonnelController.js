@@ -1,102 +1,100 @@
 // ✅ backend/controllers/PersonnelController.js
 
-import PersonnelService from '../services/PersonnelService.js'
-import PersonnelResource from '../resources/PersonnelResource.js'
-
-const convertExcelDate = (value) => {
-  if (typeof value === 'number') {
-    const date = new Date((value - 25569) * 86400 * 1000)
-    return date.toISOString().split('T')[0]
-  }
-
-  return null // null, undefined, boş string vb. için
-}
+import PersonnelService from "../services/PersonnelService.js";
+import PersonnelResource from "../resources/PersonnelResource.js";
 
 const PersonnelController = {
-   index: async (req, res) => {
+  index: async (req, res) => {
     try {
-      const personnelList = await PersonnelService.getAll()
+      const personnelList = await PersonnelService.getAll();
       res.json({
-        message: 'Personel listesi',
-        data: personnelList.map(p => PersonnelResource(p)) // ✔️ frontend buna erişiyor
-      })
+        message: "Personel listesi",
+        data: personnelList.map((p) => PersonnelResource(p)), // ✔️ frontend buna erişiyor
+      });
     } catch (err) {
-      console.error('❌ Personel listeleme hatası:', err)
-      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      console.error("❌ Personel listeleme hatası:", err);
+      res.status(500).json({ message: "Bir hata oluştu", error: err.message });
     }
   },
 
   show: async (req, res) => {
     try {
-      const personnel = await PersonnelService.getById(req.params.id)
-      if (!personnel) return res.status(404).json({ message: 'Personel bulunamadı' })
+      const personnel = await PersonnelService.getById(req.params.id);
+      if (!personnel) return res.status(404).json({ message: "Personel bulunamadı" });
 
       res.json({
-        message: 'Personel detay',
-        data: PersonnelResource(personnel)
-      })
+        message: "Personel detay",
+        data: PersonnelResource(personnel),
+      });
     } catch (err) {
-      console.error('❌ Personel detay hatası:', err)
-      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      console.error("❌ Personel detay hatası:", err);
+      res.status(500).json({ message: "Bir hata oluştu", error: err.message });
     }
   },
 
   store: async (req, res) => {
     try {
-      const newPersonnel = await PersonnelService.create(req.body)
-      res.locals.logData = { name: newPersonnel.name }
+      const data = req.body;
+      if (req.savedImageName) data.image_file = req.savedImageName;
+
+      const newPersonnel = await PersonnelService.create(data);
+      res.locals.logData = { name: newPersonnel.name };
       res.status(201).json({
-        message: 'Personel oluşturuldu',
-        data: PersonnelResource(newPersonnel)
-      })
+        message: "Personel oluşturuldu",
+        data: PersonnelResource(newPersonnel),
+      });
     } catch (err) {
-      console.error('❌ Personel oluşturma hatası:', err)
-      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      console.error("❌ Personel oluşturma hatası:", err);
+      res.status(500).json({ message: "Bir hata oluştu", error: err.message });
     }
   },
 
   update: async (req, res) => {
     try {
-      const updatedPersonnel = await PersonnelService.update(req.params.id, req.body)
-      if (!updatedPersonnel) return res.status(404).json({ message: 'Personel bulunamadı' })
-      res.locals.logData = { name: updatedPersonnel.name }
-      res.json({ message: 'Personel güncellendi', data: PersonnelResource(updatedPersonnel) })
+      const data = req.body;
+      if (req.savedImageName) data.image_file = req.savedImageName;
+
+      const updatedPersonnel = await PersonnelService.update(req.params.id, data);
+      if (!updatedPersonnel) return res.status(404).json({ message: "Personel bulunamadı" });
+
+      res.locals.logData = { name: updatedPersonnel.name };
+      res.json({
+        message: "Personel güncellendi",
+        data: PersonnelResource(updatedPersonnel),
+      });
     } catch (err) {
-      console.error('❌ Personel güncelleme hatası:', err)
-      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      console.error("❌ Personel güncelleme hatası:", err);
+      res.status(500).json({ message: "Bir hata oluştu", error: err.message });
     }
   },
 
   destroy: async (req, res) => {
     try {
-      const deletedPersonnel = await PersonnelService.delete(req.params.id)
-      if (!deletedPersonnel) return res.status(404).json({ message: 'Personel bulunamadı' })
-      res.locals.logData = { name: deletedPersonnel.name }
-      res.json({ message: 'Personel silindi' })
+      const deletedPersonnel = await PersonnelService.delete(req.params.id);
+      if (!deletedPersonnel) return res.status(404).json({ message: "Personel bulunamadı" });
+      res.locals.logData = { name: deletedPersonnel.name };
+      res.json({ message: "Personel silindi" });
     } catch (err) {
-      console.error('❌ Personel silme hatası:', err)
-      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      console.error("❌ Personel silme hatası:", err);
+      res.status(500).json({ message: "Bir hata oluştu", error: err.message });
     }
   },
-   importBulk: async (req, res) => {
+  importBulk: async (req, res) => {
     try {
-      const rows = req.body.data
+      const rows = req.body.data;
       if (!Array.isArray(rows)) {
-        return res.status(400).json({ message: 'Geçersiz veri' })
+        return res.status(400).json({ message: "Geçersiz veri" });
       }
 
       // ✅ Zaten middleware'de normalize edildi
-      const inserted = await PersonnelService.importMany(rows)
+      const inserted = await PersonnelService.importMany(rows);
 
-      res.status(201).json({ message: 'Toplu personel eklendi', inserted })
+      res.status(201).json({ message: "Toplu personel eklendi", inserted });
     } catch (err) {
-      console.error('❌ Toplu ekleme hatası:', err)
-      res.status(500).json({ message: 'Bir hata oluştu', error: err.message })
+      console.error("❌ Toplu ekleme hatası:", err);
+      res.status(500).json({ message: "Bir hata oluştu", error: err.message });
     }
-  }
+  },
+};
 
-
-
-}
-
-export default PersonnelController
+export default PersonnelController;

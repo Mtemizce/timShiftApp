@@ -1,67 +1,84 @@
-// frontend/modules/Personnel/pages/editPersonnel.jsx
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import usePersonnelStore from '@/store/personnel'
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import usePersonnelStore from "@/store/personnel";
+import { useDefinitionsStore } from "@/store/definitionsStore";
+import Topbar from "./../components/Topbar";
+import PersonnelFormFields from "../components/PersonnelFormFields";
+import { notify } from "@/utils/notify";
 
 export default function EditPersonnel() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const formRef = useRef()
-  const { getPersonnelById, selectedPersonnel } = usePersonnelStore()
-  const [loading, setLoading] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { getPersonnelById, selectedPersonnel } = usePersonnelStore();
+  const { definitions, fetchDefinitions } = useDefinitionsStore();
+  const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  const groupedDefinitions = definitions.reduce((acc, curr) => {
+    if (!acc[curr.type]) acc[curr.type] = [];
+    acc[curr.type].push(curr.key);
+    return acc;
+  }, {});
 
   useEffect(() => {
-    getPersonnelById(id)
-  }, [id, getPersonnelById])
-
-  useEffect(() => {
-    if (selectedPersonnel && formRef.current) {
-      Object.entries(selectedPersonnel).forEach(([key, value]) => {
-        const input = formRef.current.elements.namedItem(key)
-        if (input) input.value = value
-      })
-    }
-  }, [selectedPersonnel])
+    const load = async () => {
+      await fetchDefinitions();
+      await getPersonnelById(id);
+      setReady(true);
+    };
+    load();
+  }, [id]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const formData = Object.fromEntries(new FormData(formRef.current).entries())
-    setLoading(true)
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    setLoading(true);
     try {
       const res = await fetch(`/api/personnel/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(formData),
-      })
-      if (!res.ok) throw new Error('Güncelleme başarısız')
-      navigate('/personnel')
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        notify("Hata", `${errorData?.errors?.[0]?.msg} (${errorData?.errors?.[0]?.path})`, {
+          toastr: true,
+          duration: 3000,
+          icon: "error",
+        });
+        return;
+      }
+
+      notify("Başarılı", "Personel başarıyla güncellendi", { icon: "success", duration: 2000 });
+      navigate("/personnel");
     } catch (err) {
-      console.error('Güncelleme hatası:', err)
-      alert('Personel güncellenemedi')
+      notify("Hata", err.message, { toastr: true, duration: 3000, icon: "error" });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  if (!ready || !selectedPersonnel) return <div className="p-4">Yükleniyor...</div>;
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <h1 className="text-lg font-bold mb-4">Personel Güncelle</h1>
-      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-        <input name="name" placeholder="Ad Soyad" className="w-full p-2 border rounded" />
-        <input name="tc_no" placeholder="TC No" className="w-full p-2 border rounded" />
-        <input name="phone" placeholder="Telefon" className="w-full p-2 border rounded" />
-        <input name="email" placeholder="Email" className="w-full p-2 border rounded" />
-        <input name="department" placeholder="Departman" className="w-full p-2 border rounded" />
-        <input name="role" placeholder="Görev" className="w-full p-2 border rounded" />
-        <input name="start_date" type="date" className="w-full p-2 border rounded" />
-
-        <button disabled={loading} className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded">
-          {loading ? 'Kaydediliyor...' : 'Kaydet'}
-        </button>
+    <>
+      <Topbar />
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-5xl mx-auto p-6 dark:bg-gray-900 rounded-lg shadow"
+        encType="multipart/form-data"
+      >
+        <h2 className="text-2xl font-bold mb-4">Personel Güncelle</h2>
+        <PersonnelFormFields
+          definitions={groupedDefinitions}
+          defaultValues={selectedPersonnel}
+          loading={loading}
+        />
       </form>
-    </div>
-  )
+    </>
+  );
 }
