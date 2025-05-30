@@ -9,7 +9,7 @@ export const personnelRules = {
     body('criminal_record').optional().isString(),
     body('children_count').optional().isInt({ min: 0 }),
     body('start_date').optional().isISO8601().toDate(),
-    body('end_date').optional().isISO8601().toDate(),
+    body('end_date').optional().customSanitizer((v) => (v === "" ? undefined : v)).isISO8601().toDate(),
     body('data.*.birth_date').optional().isISO8601().toDate()
   ],
 
@@ -19,7 +19,7 @@ export const personnelRules = {
     body('phone').optional().isString(),
     body('children_count').optional().isInt({ min: 0 }),
     body('start_date').optional().isISO8601().toDate(),
-    body('end_date').optional().isISO8601().toDate(),
+    body('end_date').optional().customSanitizer((v) => (v === "" ? undefined : v)).isISO8601().toDate(),
     body('data.*.birth_date').optional().isISO8601().toDate()
   ],
 

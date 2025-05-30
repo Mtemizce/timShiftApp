@@ -70,15 +70,7 @@ export default function AddPersonnel() {
       >
         <h2 className="text-2xl font-bold mb-4">Yeni Personel</h2>
         <PersonnelFormFields definitions={groupedDefinitions} loading={loading} />
-        <div className="flex justify-end mt-4">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-            disabled={loading}
-          >
-            {loading ? "Kaydediliyor..." : "Kaydet"}
-          </button>
-        </div>
+        
       </form>
     </>
   );

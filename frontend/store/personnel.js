@@ -3,7 +3,7 @@ import { personnelColumns } from "./personnelColumns";
 
 const usePersonnelStore = create((set) => ({
   searchText: "",
-  visibleColumns: ["name", "phone", "department", "role", "start_date"],
+  visibleColumns: ["image_file", "name", "phone", "department", "role", "start_date"],
   fullscreen: false,
   orderBy: "",
   orderDirection: "asc",
